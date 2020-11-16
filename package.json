@@ -1,0 +1,27 @@
+{
+  "name": "youtubecontroller",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve-browser-code": "rollup -c browserCode/rollup.config.js --watch",
+    "start-dev": "ts-node src/main.ts",
+    "start-development": "ts-node src/main.ts",
+    "start-production": "node dist/main.js",
+    "deploy": "rimraf node_modules && npm install && tsc && rimraf node_modules && npm install --production"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "easy-youtube-info": "^1.0.2",
+    "http-status-codes": "^1.4.0",
+    "ws": "^7.3.1",
+    "ytsr": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/ws": "^7.2.7",
+    "typescript": "^4.0.3",
+    "ts-node": "^9.0.0"
+  }
+}

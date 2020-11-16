@@ -1,0 +1,41 @@
+import * as http from 'http';
+import {HttpApi} from './Controlling/HTTP/HttpApi';
+import {getHttpEndpointDefinitions} from './Controlling/HTTP/httpEndpointDefinitions';
+import {YoutubeController} from './YoutubeController';
+import {ShowYoutubeInstancesExecutor} from './Controlling/Executors/ShowYoutubeInstancesExecutor';
+import {YoutubeInstanceIdParser} from './Controlling/Parsers/YoutubeInstanceIdParser';
+import {PlayExecutor} from './Controlling/Executors/PlayExecutor';
+import {PauseExecutor} from './Controlling/Executors/PauseExecutor';
+import {WebSocketServer} from './WebSocket/WebSocketServer';
+import {WatchExecutor} from './Controlling/Executors/WatchExecutor';
+import {VideoIdAndYoutubeInstanceParser} from "./Controlling/Parsers/VideoIdAndYoutubeInstanceParser";
+import {JsonBodyDataGetter} from "./Controlling/Parsers/JsonBodyDataGetter";
+import {WatchPreviousExecutor} from "./Controlling/Executors/WatchPreviousExecutor";
+import {WatchNextExecutor} from "./Controlling/Executors/WatchNextExecutor";
+import {config} from "./config";
+
+const youtubeController = new YoutubeController();
+
+const httpApi = new HttpApi(getHttpEndpointDefinitions({
+        youtubeInstanceIdParser: new YoutubeInstanceIdParser(),
+        videoIdAndYoutubeInstanceParser: new VideoIdAndYoutubeInstanceParser(new JsonBodyDataGetter(config.serverApi.maxUploadTimeInMs))
+    },
+    {
+        showYoutubeInstances: new ShowYoutubeInstancesExecutor(youtubeController),
+        play: new PlayExecutor(youtubeController),
+        pause: new PauseExecutor(youtubeController),
+        watch: new WatchExecutor(youtubeController),
+        watchNext: new WatchNextExecutor(youtubeController),
+        watchPrevious: new WatchPreviousExecutor(youtubeController)
+    }));
+const httpServer = http.createServer(async (request, response) => {
+    console.debug("handling request");
+    const responseOptions = await httpApi.handle(request);
+    console.log(`responding with ${JSON.stringify(responseOptions)}`);
+    response.setHeader('Content-Type', 'application/json');
+    response.statusCode = responseOptions.statusCode;
+    response.end(JSON.stringify(responseOptions.data));
+});
+
+httpServer.listen(config.serverApi.port);
+new WebSocketServer(youtubeController, config.browser);
