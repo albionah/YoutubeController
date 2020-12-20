@@ -4,11 +4,45 @@
 // @grant    unsafeWindow
 // ==/UserScript==
 
-const video = document.querySelector("video");
-const player = unsafeWindow.document.getElementById("movie_player");
 let connection;
 
-function getMediaInfo() {
+async function getBasicElements() {
+    return new Promise((resolve) => {
+        const video = document.querySelector("video");
+        const player = unsafeWindow.document.getElementById("movie_player");
+        if (video && player) {
+            resolve({video, player});
+        }
+        else {
+            setTimeout(() => getBasicElements().then(resolve), 1000);
+        }
+    });
+
+}
+
+getBasicElements().then(({video, player}) => {
+    video.addEventListener("canplaythrough", () => {
+        console.log("event canplaythrough");
+        uploadBasicInfo(player);
+    });
+    video.addEventListener("play", () => {
+        console.log("event play");
+        uploadBasicInfo(player);
+    });
+    video.addEventListener("pause", () => {
+        console.log("event pause");
+        uploadBasicInfo(player);
+    });
+    // video.addEventListener("volumechange", () => {
+    //     console.log("volumechange");
+    //     uploadVolumeInfo();
+    // });
+
+    connect(video, player);
+});
+
+
+function getMediaInfo(player) {
     console.debug("getting media info");
     return new Promise((resolve) => {
         const h1s = document.getElementsByTagName("h1");
@@ -22,49 +56,32 @@ function getMediaInfo() {
                 isPlaying: stats.vpa !== "1"
             });
         } else {
-            setTimeout(() => getMediaInfo().then((mediaInfo) => resolve(mediaInfo)), 100);
+            setTimeout(() => getMediaInfo().then(resolve), 100);
         }
     });
 }
 
-function uploadBasicInfo() {
-    getMediaInfo().then((mediaInfo) => {
+function uploadBasicInfo(player) {
+    getMediaInfo(player).then((mediaInfo) => {
         console.debug("media info", mediaInfo);
         connection?.send(JSON.stringify(mediaInfo));
     });
 }
 
-function uploadVolumeInfo() {
+function uploadVolumeInfo(player) {
     console.log(JSON.stringify(player.getVideoStats()));
     const info = {volume: player.getVideoStats().volume};
     console.log(info);
     connection?.send(JSON.stringify(info));
 }
 
-video.addEventListener("canplaythrough", () => {
-    console.log("event canplaythrough");
-    uploadBasicInfo();
-});
-video.addEventListener("play", () => {
-    console.log("event play");
-    uploadBasicInfo();
-});
-video.addEventListener("pause", () => {
-    console.log("event pause");
-    uploadBasicInfo();
-});
-// video.addEventListener("volumechange", () => {
-//     console.log("volumechange");
-//     uploadVolumeInfo();
-// });
-
-function connect() {
+function connect(video, player) {
     const websocket = new WebSocket("ws://localhost:7789");
 
     websocket.onopen = () => {
         console.debug("connected to Youtube controller");
         connection = websocket;
-        uploadBasicInfo();
+        uploadBasicInfo(player);
     }
     websocket.onmessage = (rawMessage) => {
         try {
@@ -98,8 +115,9 @@ function connect() {
 
                 case "watch":
                     console.log(message.id);
-                    player.cueVideoById(message.id);
-                    // location.href = message.id;
+                    // player.cueVideoById(message.id);
+                    // player.playVideo();
+                    location.href = message.id;
                     break;
             }
         } catch (error) {
@@ -107,15 +125,14 @@ function connect() {
         }
     }
 
-    websocket.onclose = (e) => {
-        console.info('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
+    websocket.onclose = (event) => {
+        console.info('Socket is closed. Reconnect will be attempted in 3 seconds.', event.reason);
         connection = undefined;
-        setTimeout(connect, 3000);
+        setTimeout(() => connect(video, player), 3000);
     };
 
-    websocket.onerror = (err) => {
-        console.error('Socket encountered error: ', err.message, 'Closing socket');
+    websocket.onerror = (error) => {
+        console.error('Socket encountered error: ', error.message, 'Closing socket');
         websocket.close();
     };
 }
-connect();

@@ -10,6 +10,9 @@ import {WatchExecutor} from '../Executors/WatchExecutor';
 import {VideoIdAndYoutubeInstanceParser} from "../Parsers/VideoIdAndYoutubeInstanceParser";
 import {WatchNextExecutor} from "../Executors/WatchNextExecutor";
 import {WatchPreviousExecutor} from "../Executors/WatchPreviousExecutor";
+import {GetAutoCompleteSuggestionsExecutor} from "../Executors/GetAutoCompleteSuggestionsExecutor";
+import {QueryParser} from "../Parsers/QueryParser";
+import {GetSearchResultsExecutor} from "../Executors/GetSearchResultsExecutor";
 
 export interface HttpEndpointDefinition<OPTIONS, RESULT_DATA> extends EndpointDefinition<OPTIONS, RESULT_DATA>
 {
@@ -29,7 +32,8 @@ function use<OPTIONS, RESULT_DATA>(...args: any[]): { parser?: Parser<OPTIONS>, 
 export interface Parsers
 {
     youtubeInstanceIdParser: YoutubeInstanceIdParser,
-    videoIdAndYoutubeInstanceParser: VideoIdAndYoutubeInstanceParser
+    videoIdAndYoutubeInstanceParser: VideoIdAndYoutubeInstanceParser,
+    queryParser: QueryParser
 }
 
 export interface Executors
@@ -39,7 +43,9 @@ export interface Executors
     pause: PauseExecutor,
     watch: WatchExecutor,
     watchNext: WatchNextExecutor,
-    watchPrevious: WatchPreviousExecutor
+    watchPrevious: WatchPreviousExecutor,
+    getAutoCompleteSuggestions: GetAutoCompleteSuggestionsExecutor,
+    getSearchResults: GetSearchResultsExecutor
 }
 
 export function getHttpEndpointDefinitions(parsers: Parsers, executors: Executors): ReadonlyArray<HttpEndpointDefinition<unknown, unknown>>
@@ -79,6 +85,18 @@ export function getHttpEndpointDefinitions(parsers: Parsers, executors: Executor
             method: HttpMethod.POST,
             parser: parsers.youtubeInstanceIdParser,
             executor: executors.watchPrevious
+        },
+        {
+            route: '/auto-complete-suggestions',
+            method: HttpMethod.GET,
+            parser: parsers.queryParser,
+            executor: executors.getAutoCompleteSuggestions
+        },
+        {
+            route: '/search-results',
+            method: HttpMethod.GET,
+            parser: parsers.queryParser,
+            executor: executors.getSearchResults
         }
     ];
 }

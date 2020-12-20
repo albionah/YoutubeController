@@ -13,12 +13,16 @@ import {JsonBodyDataGetter} from "./Controlling/Parsers/JsonBodyDataGetter";
 import {WatchPreviousExecutor} from "./Controlling/Executors/WatchPreviousExecutor";
 import {WatchNextExecutor} from "./Controlling/Executors/WatchNextExecutor";
 import {config} from "./config";
+import {QueryParser} from "./Controlling/Parsers/QueryParser";
+import {GetAutoCompleteSuggestionsExecutor} from "./Controlling/Executors/GetAutoCompleteSuggestionsExecutor";
+import {GetSearchResultsExecutor} from "./Controlling/Executors/GetSearchResultsExecutor";
 
 const youtubeController = new YoutubeController();
 
 const httpApi = new HttpApi(getHttpEndpointDefinitions({
         youtubeInstanceIdParser: new YoutubeInstanceIdParser(),
-        videoIdAndYoutubeInstanceParser: new VideoIdAndYoutubeInstanceParser(new JsonBodyDataGetter(config.serverApi.maxUploadTimeInMs))
+        videoIdAndYoutubeInstanceParser: new VideoIdAndYoutubeInstanceParser(new JsonBodyDataGetter(config.serverApi.maxUploadTimeInMs)),
+        queryParser: new QueryParser()
     },
     {
         showYoutubeInstances: new ShowYoutubeInstancesExecutor(youtubeController),
@@ -26,13 +30,16 @@ const httpApi = new HttpApi(getHttpEndpointDefinitions({
         pause: new PauseExecutor(youtubeController),
         watch: new WatchExecutor(youtubeController),
         watchNext: new WatchNextExecutor(youtubeController),
-        watchPrevious: new WatchPreviousExecutor(youtubeController)
+        watchPrevious: new WatchPreviousExecutor(youtubeController),
+        getAutoCompleteSuggestions: new GetAutoCompleteSuggestionsExecutor(),
+        getSearchResults: new GetSearchResultsExecutor()
     }));
 const httpServer = http.createServer(async (request, response) => {
     console.debug("handling request");
     const responseOptions = await httpApi.handle(request);
     console.log(`responding with ${JSON.stringify(responseOptions)}`);
-    response.setHeader('Content-Type', 'application/json');
+    response.setHeader('Content-Type', 'application/json; charset=utf-8');
+    response.setHeader('Access-Control-Allow-Origin', '*');
     response.statusCode = responseOptions.statusCode;
     response.end(JSON.stringify(responseOptions.data));
 });
