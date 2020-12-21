@@ -117,7 +117,7 @@ function connect(video, player) {
                     console.log(message.id);
                     // player.cueVideoById(message.id);
                     // player.playVideo();
-                    location.href = message.id;
+                    location.href = `?v=${message.id}`;
                     break;
             }
         } catch (error) {
