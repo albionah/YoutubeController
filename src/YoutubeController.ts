@@ -11,12 +11,12 @@ export class YoutubeController implements YoutubeInstancesManager, YoutubeInstan
         this.youtubeInstances = new Map();
     }
 
-    public onYoutubeInstanceConnected(youtubeInstance: YoutubeInstance): void
+    public addYoutubeInstance(youtubeInstance: YoutubeInstance): void
     {
         this.youtubeInstances.set(youtubeInstance.id, youtubeInstance);
     }
 
-    public onYoutubeInstanceClosed(youtubeInstance: YoutubeInstance): void
+    public removeYoutubeInstance(youtubeInstance: YoutubeInstance): void
     {
         this.youtubeInstances.delete(youtubeInstance.id);
     }

@@ -6,7 +6,7 @@ import {ShowYoutubeInstancesExecutor} from './Controlling/Executors/ShowYoutubeI
 import {YoutubeInstanceIdParser} from './Controlling/Parsers/YoutubeInstanceIdParser';
 import {PlayExecutor} from './Controlling/Executors/PlayExecutor';
 import {PauseExecutor} from './Controlling/Executors/PauseExecutor';
-import {WebSocketServer} from './WebSocket/WebSocketServer';
+import {YoutubeInstanceWebSocketServer} from './WebSocket/YoutubeInstanceWebSocketServer';
 import {WatchExecutor} from './Controlling/Executors/WatchExecutor';
 import {VideoIdAndYoutubeInstanceParser} from "./Controlling/Parsers/VideoIdAndYoutubeInstanceParser";
 import {JsonBodyDataGetter} from "./Controlling/Parsers/JsonBodyDataGetter";
@@ -16,6 +16,7 @@ import {config} from "./config";
 import {QueryParser} from "./Controlling/Parsers/QueryParser";
 import {GetAutoCompleteSuggestionsExecutor} from "./Controlling/Executors/GetAutoCompleteSuggestionsExecutor";
 import {GetSearchResultsExecutor} from "./Controlling/Executors/GetSearchResultsExecutor";
+import {YoutubeInstanceBuilder} from "./YoutubeInstanceBuilder";
 
 const youtubeController = new YoutubeController();
 
@@ -45,4 +46,5 @@ const httpServer = http.createServer(async (request, response) => {
 });
 
 httpServer.listen(config.serverApi.port);
-new WebSocketServer(youtubeController, config.browser);
+const youtubeInstanceBuilder = new YoutubeInstanceBuilder();
+new YoutubeInstanceWebSocketServer(youtubeController, youtubeInstanceBuilder, config.browser);

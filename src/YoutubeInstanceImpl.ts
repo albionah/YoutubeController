@@ -1,25 +1,26 @@
 import {VideoId, VideoInfo, YoutubeInstance, YoutubeInstanceId} from './YoutubeInstanceAccessor';
+import {YoutubeInstanceCommander} from "./YoutubeInstanceCommander";
 
 export class YoutubeInstanceImpl implements YoutubeInstance
 {
     public readonly id: YoutubeInstanceId;
+    private readonly commander: YoutubeInstanceCommander;
     private videoInfo: VideoInfo;
-    private readonly client: { send: (command) => Promise<void> };
 
-    public constructor(id: YoutubeInstanceId, client: { send: (command: object) => Promise<void> })
+    public constructor(id: YoutubeInstanceId, commander: YoutubeInstanceCommander)
     {
-        this.client = client;
+        this.commander = commander;
         this.id = id;
     }
 
     public async watchNext(): Promise<void>
     {
-        await this.client.send({type: 'watchNext'});
+        await this.commander.send({type: 'watchNext'});
     }
 
     public async watchPrevious(): Promise<void>
     {
-        await this.client.send({type: 'watchPrevious'});
+        await this.commander.send({type: 'watchPrevious'});
     }
 
     public getVideoInfo(): VideoInfo
@@ -34,31 +35,31 @@ export class YoutubeInstanceImpl implements YoutubeInstance
 
     public async mute(): Promise<void>
     {
-        await this.client.send({type: 'mute'});
+        await this.commander.send({type: 'mute'});
     }
 
     public async pause(): Promise<void>
     {
-        await this.client.send({type: 'pause'});
+        await this.commander.send({type: 'pause'});
     }
 
     public async play(): Promise<void>
     {
-        await this.client.send({type: 'play'});
+        await this.commander.send({type: 'play'});
     }
 
     public async stop(): Promise<void>
     {
-        await this.client.send({type: 'stop'});
+        await this.commander.send({type: 'stop'});
     }
 
     public async toggle(): Promise<void>
     {
-        await this.client.send({type: 'toggle'});
+        await this.commander.send({type: 'toggle'});
     }
 
     public async watch(id: VideoId): Promise<void>
     {
-        await this.client.send({type: 'watch', id});
+        await this.commander.send({type: 'watch', id});
     }
 }
