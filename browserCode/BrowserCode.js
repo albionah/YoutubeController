@@ -43,13 +43,14 @@ getBasicElements().then(({video, player}) => {
 
 
 function getMediaInfo(player) {
-    console.debug("getting media info");
     return new Promise((resolve) => {
+        const title = player.getVideoData()?.title;
         const h1s = document.getElementsByTagName("h1");
-        if (h1s[0] && h1s[0].textContent.replace(/^[ \n]+/i, '')) {
+        console.debug("getting media info", title, h1s[0]?.textContent);
+        if (title || (h1s[0] && h1s[0].textContent.replace(/^[ \n]+/i, ''))) {
             const stats = player.getVideoStats();
             resolve({
-                title: h1s[0].textContent,
+                title: title ?? h1s[0].textContent,
                 videoId: stats.docid,
                 duration: stats.len,
                 currentPosition: stats.lct,
