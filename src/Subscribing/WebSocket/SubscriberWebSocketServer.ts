@@ -1,13 +1,13 @@
 import * as WebSocket from 'ws';
-import {SubscriberManager} from "../SubscriberManager";
+import {SubscribersManager} from "../SubscribersManager";
 import {WebSocketSubscriber} from "./WebSocketSubscriber";
 
 export class SubscriberWebSocketServer
 {
     private readonly server: WebSocket.Server;
-    private readonly subscriberManager: SubscriberManager;
+    private readonly subscriberManager: SubscribersManager;
 
-    public constructor(config: { port: number }, subscriberManager: SubscriberManager)
+    public constructor(config: { port: number }, subscriberManager: SubscribersManager)
     {
         this.subscriberManager = subscriberManager;
         this.server = new WebSocket.Server(config);

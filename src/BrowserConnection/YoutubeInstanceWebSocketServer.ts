@@ -1,6 +1,7 @@
 import * as WebSocket from 'ws';
 import {YoutubeInstancesManager} from './YoutubeInstancesManager';
 import {YoutubeInstanceBuilder} from "./YoutubeInstanceBuilder";
+import {YoutubeInstanceCommander} from "./YoutubeInstanceCommander";
 
 export class YoutubeInstanceWebSocketServer
 {
@@ -20,7 +21,7 @@ export class YoutubeInstanceWebSocketServer
     {
         this.server.on('connection', (client, request) => {
             console.debug(`new connection from ${request.connection.remoteAddress}:${request.connection.remotePort}`);
-            const youtubeInstance = this.youtubeInstanceBuilder.build(request.connection.remotePort, {send: async (command) => client.send(JSON.stringify(command))});
+            const youtubeInstance = this.youtubeInstanceBuilder.build(request.connection.remotePort, this.buildCommander(client));
             this.youtubeInstancesManager.addYoutubeInstance(youtubeInstance);
 
             client.on('message', (rawMessage: string) => {
@@ -33,5 +34,17 @@ export class YoutubeInstanceWebSocketServer
             });
         });
         this.server.on('error', ((error) => console.error(error.message)));
+    }
+
+    private buildCommander(client: WebSocket): YoutubeInstanceCommander
+    {
+        return {
+            send: (command) => new Promise((resolve, reject) => {
+                client.send(JSON.stringify(command), (error) => {
+                    if (error) reject(error);
+                    else resolve();
+                });
+            })
+        };
     }
 }

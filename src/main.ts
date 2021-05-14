@@ -18,14 +18,14 @@ import {GetSearchResultsExecutor} from "./Controlling/Executors/GetSearchResults
 import {EventProducingYoutubeInstanceBuilder} from "./Subscribing/EventProducingYoutubeInstanceBuilder";
 import {SubscriberWebSocketServer} from "./Subscribing/WebSocket/SubscriberWebSocketServer";
 import {EventProducingYoutubeController} from "./Subscribing/EventProducingYoutubeController";
-import {SubscriberManager} from "./Subscribing/SubscriberManager";
+import {SubscribersManager} from "./Subscribing/SubscribersManager";
 import {MessageCreator} from "./Subscribing/MessageCreator";
 import {YoutubeController} from "./YoutubeController";
 import {EventPublisher} from "./Subscribing/EventPublisher";
 
 const youtubeController = new YoutubeController();
 const messageCreator = new MessageCreator(new ShowYoutubeInstancesExecutor(youtubeController));
-const subscriberManager = new SubscriberManager(messageCreator);
+const subscriberManager = new SubscribersManager(messageCreator);
 const eventPublisher = new EventPublisher(messageCreator, subscriberManager);
 const eventProducingYoutubeController = new EventProducingYoutubeController(youtubeController, eventPublisher);
 

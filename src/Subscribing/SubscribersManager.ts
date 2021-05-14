@@ -2,7 +2,7 @@ import {Message} from "./Message";
 import {Subscriber} from "./Subscriber";
 import {MessageCreator} from "./MessageCreator";
 
-export class SubscriberManager
+export class SubscribersManager
 {
     private readonly subscribers: Array<Subscriber>;
     private readonly messageCreator: MessageCreator;
@@ -13,22 +13,22 @@ export class SubscriberManager
         this.subscribers = [];
     }
 
-    public addSubscriber(subscriber: Subscriber): void
+    public async addSubscriber(subscriber: Subscriber): Promise<void>
     {
         this.subscribers.push(subscriber);
-        console.log("Počet odběratelů", this.subscribers.length);
-        subscriber.sendMessage(this.messageCreator.createInitiateSyncMessage());
+        const initialSyncMessage = await this.messageCreator.createInitialSyncMessage();
+        await subscriber.sendMessage(initialSyncMessage);
     }
 
     public removeSubscriber(subscriber: Subscriber): void
     {
         const indexOfRemovingItem = this.subscribers.indexOf(subscriber);
         this.subscribers.splice(indexOfRemovingItem, 1);
-        console.log("Počet odběratelů", this.subscribers.length);
     }
 
-    public sendMessage(message: Message): void
+    public publishMessage(message: Message): Promise<void>
     {
-        this.subscribers.forEach((subscriber) => subscriber.sendMessage(message));
+        const promises = this.subscribers.map((subscriber) => subscriber.sendMessage(message));
+        return Promise.all(promises).then();
     }
 }

@@ -11,8 +11,13 @@ export class WebSocketSubscriber implements Subscriber
         this.connection = connection;
     }
 
-    public sendMessage(message: Message): void
+    public async sendMessage(message: Message): Promise<void>
     {
-        this.connection.send(JSON.stringify(message));
+        return new Promise((resolve, reject) => {
+            this.connection.send(JSON.stringify(message), (error) => {
+                if (error) reject(error);
+                else resolve();
+            });
+        });
     }
 }

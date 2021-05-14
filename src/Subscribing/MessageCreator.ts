@@ -12,9 +12,9 @@ export class MessageCreator
         this.showYoutubeInstancesExecutor = showYoutubeInstancesExecutor;
     }
 
-    public createInitiateSyncMessage(): Message
+    public async createInitialSyncMessage(): Promise<Message>
     {
-        const data = this.showYoutubeInstancesExecutor.execute();
+        const data = await this.showYoutubeInstancesExecutor.execute();
         return {type: "InitiateSyncMessage", data};
     }
 

@@ -1,34 +1,34 @@
 import {YoutubeInstanceId} from "../DataTypes/YoutubeInstanceId";
 import {VideoInfo} from "../DataTypes/VideoInfo";
-import {SubscriberManager} from "./SubscriberManager";
+import {SubscribersManager} from "./SubscribersManager";
 import {MessageCreator} from "./MessageCreator";
 
 export class EventPublisher
 {
     private readonly messageCreator: MessageCreator;
-    private readonly subscriberManager: SubscriberManager;
+    private readonly subscriberManager: SubscribersManager;
 
-    public constructor(messageCreator: MessageCreator, subscriberManager: SubscriberManager)
+    public constructor(messageCreator: MessageCreator, subscriberManager: SubscribersManager)
     {
         this.messageCreator = messageCreator;
         this.subscriberManager = subscriberManager;
     }
 
-    public publishYoutubeInstanceAddedMessage(id: YoutubeInstanceId): void
+    public async publishYoutubeInstanceAddedMessage(id: YoutubeInstanceId): Promise<void>
     {
         const message = this.messageCreator.createYoutubeInstanceAddedMessage(id);
-        this.subscriberManager.sendMessage(message);
+        await this.subscriberManager.publishMessage(message);
     }
 
-    public publishYoutubeInstanceRemovedMessage(id: YoutubeInstanceId): void
+    public async publishYoutubeInstanceRemovedMessage(id: YoutubeInstanceId): Promise<void>
     {
         const message = this.messageCreator.createYoutubeInstanceRemovedMessage(id);
-        this.subscriberManager.sendMessage(message);
+        await this.subscriberManager.publishMessage(message);
     }
 
-    public publishYoutubeInstanceChangedMessage(id: YoutubeInstanceId, videoInfo: VideoInfo): void
+    public async publishYoutubeInstanceChangedMessage(id: YoutubeInstanceId, videoInfo: VideoInfo): Promise<void>
     {
         const message = this.messageCreator.createYoutubeInstanceChangedMessage(id, videoInfo);
-        this.subscriberManager.sendMessage(message);
+        await this.subscriberManager.publishMessage(message);
     }
 }
