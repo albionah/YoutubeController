@@ -1,6 +1,6 @@
 import * as WebSocket from 'ws';
 import {YoutubeInstancesManager} from './YoutubeInstancesManager';
-import {YoutubeInstanceBuilder} from "../Subscribing/YoutubeInstanceBuilder";
+import {YoutubeInstanceBuilder} from "./YoutubeInstanceBuilder";
 
 export class YoutubeInstanceWebSocketServer
 {

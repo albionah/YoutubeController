@@ -1,15 +1,15 @@
 import {Message} from "./Message";
 import {Subscriber} from "./Subscriber";
-import {MessageGenerator} from "./MessageGenerator";
+import {MessageCreator} from "./MessageCreator";
 
 export class SubscriberManager
 {
     private readonly subscribers: Array<Subscriber>;
-    private readonly messageGenerator: MessageGenerator;
+    private readonly messageCreator: MessageCreator;
 
-    public constructor(messageGenerator: MessageGenerator)
+    public constructor(messageCreator: MessageCreator)
     {
-        this.messageGenerator = messageGenerator;
+        this.messageCreator = messageCreator;
         this.subscribers = [];
     }
 
@@ -17,7 +17,7 @@ export class SubscriberManager
     {
         this.subscribers.push(subscriber);
         console.log("Počet odběratelů", this.subscribers.length);
-        subscriber.sendMessage(this.messageGenerator.createInitiateSyncMessage());
+        subscriber.sendMessage(this.messageCreator.createInitiateSyncMessage());
     }
 
     public removeSubscriber(subscriber: Subscriber): void

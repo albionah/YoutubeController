@@ -1,34 +1,34 @@
 import {YoutubeInstanceId} from "../DataTypes/YoutubeInstanceId";
 import {VideoInfo} from "../DataTypes/VideoInfo";
 import {SubscriberManager} from "./SubscriberManager";
-import {MessageGenerator} from "./MessageGenerator";
+import {MessageCreator} from "./MessageCreator";
 
 export class EventPublisher
 {
-    private readonly messageGenerator: MessageGenerator;
+    private readonly messageCreator: MessageCreator;
     private readonly subscriberManager: SubscriberManager;
 
-    public constructor(messageGenerator: MessageGenerator, subscriberManager: SubscriberManager)
+    public constructor(messageCreator: MessageCreator, subscriberManager: SubscriberManager)
     {
-        this.messageGenerator = messageGenerator;
+        this.messageCreator = messageCreator;
         this.subscriberManager = subscriberManager;
     }
 
     public publishYoutubeInstanceAddedMessage(id: YoutubeInstanceId): void
     {
-        const message = this.messageGenerator.createYoutubeInstanceAddedMessage(id);
+        const message = this.messageCreator.createYoutubeInstanceAddedMessage(id);
         this.subscriberManager.sendMessage(message);
     }
 
     public publishYoutubeInstanceRemovedMessage(id: YoutubeInstanceId): void
     {
-        const message = this.messageGenerator.createYoutubeInstanceRemovedMessage(id);
+        const message = this.messageCreator.createYoutubeInstanceRemovedMessage(id);
         this.subscriberManager.sendMessage(message);
     }
 
     public publishYoutubeInstanceChangedMessage(id: YoutubeInstanceId, videoInfo: VideoInfo): void
     {
-        const message = this.messageGenerator.createYoutubeInstanceChangedMessage(id, videoInfo);
+        const message = this.messageCreator.createYoutubeInstanceChangedMessage(id, videoInfo);
         this.subscriberManager.sendMessage(message);
     }
 }
