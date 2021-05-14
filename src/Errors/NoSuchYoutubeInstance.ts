@@ -1,4 +1,4 @@
-import {YoutubeInstanceId} from "./DataTypes/YoutubeInstanceId";
+import {YoutubeInstanceId} from "../DataTypes/YoutubeInstanceId";
 
 export class NoSuchYoutubeInstance extends Error
 {

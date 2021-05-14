@@ -1,6 +1,6 @@
 import {Parser} from "./Parser";
 import {IncomingMessage} from "http";
-import {Url} from "../../Url";
+import {Url} from "../../../Utils/Url";
 
 export class QueryParser implements Parser<{query: string}>
 {

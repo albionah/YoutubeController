@@ -1,4 +1,4 @@
-import {YoutubeInstance} from "./DataTypes/YoutubeInstance";
+import {YoutubeInstance} from "../DataTypes/YoutubeInstance";
 
 export interface YoutubeInstancesManager
 {

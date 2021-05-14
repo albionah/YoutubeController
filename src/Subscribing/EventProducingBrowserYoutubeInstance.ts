@@ -1,10 +1,10 @@
-import {VideoInfo} from "./DataTypes/VideoInfo";
-import {YoutubeInstanceId} from "./DataTypes/YoutubeInstanceId";
-import {YoutubeInstanceCommander} from "./YoutubeInstanceCommander";
-import {YoutubeInstanceImpl} from "./YoutubeInstanceImpl";
+import {VideoInfo} from "../DataTypes/VideoInfo";
+import {YoutubeInstanceId} from "../DataTypes/YoutubeInstanceId";
+import {YoutubeInstanceCommander} from "../BrowserConnection/YoutubeInstanceCommander";
+import {BrowserYoutubeInstance} from "../BrowserConnection/BrowserYoutubeInstance";
 import {EventPublisher} from "./EventPublisher";
 
-export class EventProducingYoutubeInstanceImpl extends YoutubeInstanceImpl
+export class EventProducingBrowserYoutubeInstance extends BrowserYoutubeInstance
 {
     private readonly eventPublisher: EventPublisher;
 

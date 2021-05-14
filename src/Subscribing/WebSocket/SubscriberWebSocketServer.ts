@@ -1,6 +1,6 @@
 import * as WebSocket from 'ws';
 import {SubscriberManager} from "../SubscriberManager";
-import {WebSocketSubscriber} from "../WebSocketSubscriber";
+import {WebSocketSubscriber} from "./WebSocketSubscriber";
 
 export class SubscriberWebSocketServer
 {

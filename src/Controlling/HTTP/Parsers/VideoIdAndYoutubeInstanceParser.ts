@@ -2,7 +2,7 @@ import {YoutubeInstanceIdParser} from './YoutubeInstanceIdParser';
 import {IncomingMessage} from "http";
 import {Parser} from "./Parser";
 import {JsonBodyDataGetter} from "./JsonBodyDataGetter";
-import {VideoId} from "../../DataTypes/VideoId";
+import {VideoId} from "../../../DataTypes/VideoId";
 
 export class VideoIdAndYoutubeInstanceParser extends YoutubeInstanceIdParser implements Parser<{ id: number, videoId: VideoId }>
 {

@@ -1,10 +1,10 @@
 import {YoutubeInstanceCommander} from "./YoutubeInstanceCommander";
-import {VideoInfo} from "./DataTypes/VideoInfo";
-import {YoutubeInstance} from "./DataTypes/YoutubeInstance";
-import {VideoId} from "./DataTypes/VideoId";
-import {YoutubeInstanceId} from "./DataTypes/YoutubeInstanceId";
+import {VideoInfo} from "../DataTypes/VideoInfo";
+import {YoutubeInstance} from "../DataTypes/YoutubeInstance";
+import {VideoId} from "../DataTypes/VideoId";
+import {YoutubeInstanceId} from "../DataTypes/YoutubeInstanceId";
 
-export class YoutubeInstanceImpl implements YoutubeInstance
+export class BrowserYoutubeInstance implements YoutubeInstance
 {
     public readonly id: YoutubeInstanceId;
     private readonly commander: YoutubeInstanceCommander;

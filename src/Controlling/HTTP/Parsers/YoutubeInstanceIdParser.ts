@@ -1,6 +1,6 @@
 import {IncomingMessage} from 'http';
 import {Parser} from './Parser';
-import {Url} from '../../Url';
+import {Url} from '../../../Utils/Url';
 
 export class YoutubeInstanceIdParser implements Parser<{id: number}>
 {

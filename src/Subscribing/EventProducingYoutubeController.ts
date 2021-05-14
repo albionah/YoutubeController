@@ -1,5 +1,5 @@
-import {EventProducingYoutubeInstanceImpl} from "./EventProducingYoutubeInstanceImpl";
-import {YoutubeInstancesManager} from "./YoutubeInstancesManager";
+import {EventProducingBrowserYoutubeInstance} from "./EventProducingBrowserYoutubeInstance";
+import {YoutubeInstancesManager} from "../BrowserConnection/YoutubeInstancesManager";
 import {EventPublisher} from "./EventPublisher";
 
 export class EventProducingYoutubeController implements YoutubeInstancesManager
@@ -13,13 +13,13 @@ export class EventProducingYoutubeController implements YoutubeInstancesManager
         this.eventPublisher = eventPublisher;
     }
 
-    public addYoutubeInstance(youtubeInstance: EventProducingYoutubeInstanceImpl): void
+    public addYoutubeInstance(youtubeInstance: EventProducingBrowserYoutubeInstance): void
     {
         this.originalYoutubeController.addYoutubeInstance(youtubeInstance);
         this.eventPublisher.publishYoutubeInstanceAddedMessage(youtubeInstance.id);
     }
 
-    public removeYoutubeInstance(youtubeInstance: EventProducingYoutubeInstanceImpl): void
+    public removeYoutubeInstance(youtubeInstance: EventProducingBrowserYoutubeInstance): void
     {
         this.originalYoutubeController.removeYoutubeInstance(youtubeInstance);
         this.eventPublisher.publishYoutubeInstanceRemovedMessage(youtubeInstance.id);

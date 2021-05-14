@@ -1,5 +1,5 @@
-import {YoutubeInstanceId} from "./DataTypes/YoutubeInstanceId";
-import {VideoInfo} from "./DataTypes/VideoInfo";
+import {YoutubeInstanceId} from "../DataTypes/YoutubeInstanceId";
+import {VideoInfo} from "../DataTypes/VideoInfo";
 import {SubscriberManager} from "./SubscriberManager";
 import {MessageGenerator} from "./MessageGenerator";
 

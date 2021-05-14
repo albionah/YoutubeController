@@ -1,5 +1,5 @@
-import {Subscriber} from "./Subscriber";
-import {Message} from "./Message";
+import {Subscriber} from "../Subscriber";
+import {Message} from "../Message";
 import * as WebSocket from "ws";
 
 export class WebSocketSubscriber implements Subscriber

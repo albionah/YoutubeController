@@ -1,7 +1,7 @@
-import {YoutubeInstanceId} from "./DataTypes/YoutubeInstanceId";
-import {VideoInfo} from "./DataTypes/VideoInfo";
+import {YoutubeInstanceId} from "../DataTypes/YoutubeInstanceId";
+import {VideoInfo} from "../DataTypes/VideoInfo";
 import {Message} from "./Message";
-import {ShowYoutubeInstancesExecutor} from "./Controlling/Executors/ShowYoutubeInstancesExecutor";
+import {ShowYoutubeInstancesExecutor} from "../Controlling/Executors/ShowYoutubeInstancesExecutor";
 
 export class MessageGenerator
 {

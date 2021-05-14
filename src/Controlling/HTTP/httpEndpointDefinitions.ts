@@ -1,17 +1,17 @@
 import {HttpMethod} from './HttpMethod';
 import {ShowYoutubeInstancesExecutor} from '../Executors/ShowYoutubeInstancesExecutor';
 import {EndpointDefinition} from '../EndpointDefinition';
-import {Parser} from '../Parsers/Parser';
+import {Parser} from './Parsers/Parser';
 import {Executor} from '../Executors/Executor';
 import {PlayExecutor} from '../Executors/PlayExecutor';
 import {PauseExecutor} from '../Executors/PauseExecutor';
-import {YoutubeInstanceIdParser} from '../Parsers/YoutubeInstanceIdParser';
+import {YoutubeInstanceIdParser} from './Parsers/YoutubeInstanceIdParser';
 import {WatchExecutor} from '../Executors/WatchExecutor';
-import {VideoIdAndYoutubeInstanceParser} from "../Parsers/VideoIdAndYoutubeInstanceParser";
+import {VideoIdAndYoutubeInstanceParser} from "./Parsers/VideoIdAndYoutubeInstanceParser";
 import {WatchNextExecutor} from "../Executors/WatchNextExecutor";
 import {WatchPreviousExecutor} from "../Executors/WatchPreviousExecutor";
 import {GetAutoCompleteSuggestionsExecutor} from "../Executors/GetAutoCompleteSuggestionsExecutor";
-import {QueryParser} from "../Parsers/QueryParser";
+import {QueryParser} from "./Parsers/QueryParser";
 import {GetSearchResultsExecutor} from "../Executors/GetSearchResultsExecutor";
 
 export interface HttpEndpointDefinition<OPTIONS, RESULT_DATA> extends EndpointDefinition<OPTIONS, RESULT_DATA>

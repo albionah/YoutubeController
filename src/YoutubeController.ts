@@ -1,6 +1,6 @@
 import {YoutubeInstanceAccessor} from './DataTypes/YoutubeInstanceAccessor';
-import {NoSuchYoutubeInstance} from './NoSuchYoutubeInstance';
-import {YoutubeInstancesManager} from './YoutubeInstancesManager';
+import {NoSuchYoutubeInstance} from './Errors/NoSuchYoutubeInstance';
+import {YoutubeInstancesManager} from './BrowserConnection/YoutubeInstancesManager';
 import {YoutubeInstance} from "./DataTypes/YoutubeInstance";
 import {YoutubeInstanceId} from "./DataTypes/YoutubeInstanceId";
 

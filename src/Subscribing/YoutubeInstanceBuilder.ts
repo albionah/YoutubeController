@@ -1,6 +1,6 @@
-import {YoutubeInstanceCommander} from "./YoutubeInstanceCommander";
-import {YoutubeInstance} from "./DataTypes/YoutubeInstance";
-import {EventProducingYoutubeInstanceImpl} from "./EventProducingYoutubeInstanceImpl";
+import {YoutubeInstanceCommander} from "../BrowserConnection/YoutubeInstanceCommander";
+import {YoutubeInstance} from "../DataTypes/YoutubeInstance";
+import {EventProducingBrowserYoutubeInstance} from "./EventProducingBrowserYoutubeInstance";
 import {EventPublisher} from "./EventPublisher";
 
 export class YoutubeInstanceBuilder
@@ -13,6 +13,6 @@ export class YoutubeInstanceBuilder
     }
     public build(id: number, commander: YoutubeInstanceCommander): YoutubeInstance
     {
-        return new EventProducingYoutubeInstanceImpl(id, commander, this.eventPublisher);
+        return new EventProducingBrowserYoutubeInstance(id, commander, this.eventPublisher);
     }
 }

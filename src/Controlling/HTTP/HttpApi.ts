@@ -2,7 +2,7 @@ import {IncomingMessage} from 'http';
 import {BAD_REQUEST, INTERNAL_SERVER_ERROR, OK} from 'http-status-codes';
 import {HttpEndpointDefinition} from './httpEndpointDefinitions';
 import {HttpResponseOptions} from './HttpResponseOptions';
-import {Url} from '../../Url';
+import {Url} from '../../Utils/Url';
 
 export class HttpApi
 {
