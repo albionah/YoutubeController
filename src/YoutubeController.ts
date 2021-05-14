@@ -1,6 +1,8 @@
-import {YoutubeInstance, YoutubeInstanceAccessor, YoutubeInstanceId} from './YoutubeInstanceAccessor';
+import {YoutubeInstanceAccessor} from './DataTypes/YoutubeInstanceAccessor';
 import {NoSuchYoutubeInstance} from './NoSuchYoutubeInstance';
 import {YoutubeInstancesManager} from './YoutubeInstancesManager';
+import {YoutubeInstance} from "./DataTypes/YoutubeInstance";
+import {YoutubeInstanceId} from "./DataTypes/YoutubeInstanceId";
 
 export class YoutubeController implements YoutubeInstancesManager, YoutubeInstanceAccessor
 {

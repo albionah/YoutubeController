@@ -1,7 +1,6 @@
 import * as http from 'http';
 import {HttpApi} from './Controlling/HTTP/HttpApi';
 import {getHttpEndpointDefinitions} from './Controlling/HTTP/httpEndpointDefinitions';
-import {YoutubeController} from './YoutubeController';
 import {ShowYoutubeInstancesExecutor} from './Controlling/Executors/ShowYoutubeInstancesExecutor';
 import {YoutubeInstanceIdParser} from './Controlling/Parsers/YoutubeInstanceIdParser';
 import {PlayExecutor} from './Controlling/Executors/PlayExecutor';
@@ -17,8 +16,18 @@ import {QueryParser} from "./Controlling/Parsers/QueryParser";
 import {GetAutoCompleteSuggestionsExecutor} from "./Controlling/Executors/GetAutoCompleteSuggestionsExecutor";
 import {GetSearchResultsExecutor} from "./Controlling/Executors/GetSearchResultsExecutor";
 import {YoutubeInstanceBuilder} from "./YoutubeInstanceBuilder";
+import {SubscriberWebSocketServer} from "./WebSocket/SubscriberWebSocketServer";
+import {EventProducingYoutubeController} from "./EventProducingYoutubeController";
+import {SubscriberManager} from "./SubscriberManager";
+import {MessageGenerator} from "./MessageGenerator";
+import {YoutubeController} from "./YoutubeController";
+import {EventPublisher} from "./EventPublisher";
 
 const youtubeController = new YoutubeController();
+const messageGenerator = new MessageGenerator(new ShowYoutubeInstancesExecutor(youtubeController));
+const subscriberManager = new SubscriberManager(messageGenerator);
+const eventPublisher = new EventPublisher(messageGenerator, subscriberManager);
+const eventProducingYoutubeController = new EventProducingYoutubeController(youtubeController, eventPublisher);
 
 const httpApi = new HttpApi(getHttpEndpointDefinitions({
         youtubeInstanceIdParser: new YoutubeInstanceIdParser(),
@@ -46,5 +55,6 @@ const httpServer = http.createServer(async (request, response) => {
 });
 
 httpServer.listen(config.serverApi.port);
-const youtubeInstanceBuilder = new YoutubeInstanceBuilder();
-new YoutubeInstanceWebSocketServer(youtubeController, youtubeInstanceBuilder, config.browser);
+const youtubeInstanceBuilder = new YoutubeInstanceBuilder(eventPublisher);
+new YoutubeInstanceWebSocketServer(eventProducingYoutubeController, youtubeInstanceBuilder, config.browser);
+new SubscriberWebSocketServer(config.reportServer, subscriberManager);

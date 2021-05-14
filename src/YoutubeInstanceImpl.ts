@@ -1,5 +1,8 @@
-import {VideoId, VideoInfo, YoutubeInstance, YoutubeInstanceId} from './YoutubeInstanceAccessor';
 import {YoutubeInstanceCommander} from "./YoutubeInstanceCommander";
+import {VideoInfo} from "./DataTypes/VideoInfo";
+import {YoutubeInstance} from "./DataTypes/YoutubeInstance";
+import {VideoId} from "./DataTypes/VideoId";
+import {YoutubeInstanceId} from "./DataTypes/YoutubeInstanceId";
 
 export class YoutubeInstanceImpl implements YoutubeInstance
 {

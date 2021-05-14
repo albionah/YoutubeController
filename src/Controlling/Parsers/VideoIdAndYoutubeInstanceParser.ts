@@ -1,8 +1,8 @@
 import {YoutubeInstanceIdParser} from './YoutubeInstanceIdParser';
 import {IncomingMessage} from "http";
 import {Parser} from "./Parser";
-import {VideoId} from "../../YoutubeInstanceAccessor";
 import {JsonBodyDataGetter} from "./JsonBodyDataGetter";
+import {VideoId} from "../../DataTypes/VideoId";
 
 export class VideoIdAndYoutubeInstanceParser extends YoutubeInstanceIdParser implements Parser<{ id: number, videoId: VideoId }>
 {
@@ -21,6 +21,4 @@ export class VideoIdAndYoutubeInstanceParser extends YoutubeInstanceIdParser imp
         if (!videoId) throw new Error(`Missing body parameter 'videoId'.`);
         return {...(await super.parse(request)), videoId};
     }
-
-
 }

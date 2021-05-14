@@ -1,5 +1,5 @@
-import {YoutubeInstanceInfo} from '../../YoutubeInstanceAccessor';
 import {BasicExecutor} from './BasicExecutor';
+import {YoutubeInstanceInfo} from "../../DataTypes/YoutubeInstanceInfo";
 
 export class ShowYoutubeInstancesExecutor extends BasicExecutor<undefined, ReadonlyArray<YoutubeInstanceInfo>>
 {

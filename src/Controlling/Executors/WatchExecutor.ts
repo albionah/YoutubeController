@@ -1,5 +1,5 @@
 import {BasicExecutor} from './BasicExecutor';
-import {VideoId} from "../../YoutubeInstanceAccessor";
+import {VideoId} from "../../DataTypes/VideoId";
 
 export class WatchExecutor extends BasicExecutor<{id: number, videoId: VideoId}, void>
 {

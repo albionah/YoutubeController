@@ -1,4 +1,4 @@
-import {YoutubeInstanceAccessor} from '../../YoutubeInstanceAccessor';
+import {YoutubeInstanceAccessor} from '../../DataTypes/YoutubeInstanceAccessor';
 import {Executor} from './Executor';
 
 export abstract class BasicExecutor<OPTIONS, RESULT_DATA> implements Executor<OPTIONS, RESULT_DATA>

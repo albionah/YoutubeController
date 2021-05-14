@@ -32,6 +32,6 @@ export class YoutubeInstanceWebSocketServer
                 this.youtubeInstancesManager.removeYoutubeInstance(youtubeInstance);
             });
         });
-        this.server.on('error', ((error) => console.error(error)));
+        this.server.on('error', ((error) => console.error(error.message)));
     }
 }
