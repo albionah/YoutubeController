@@ -2,7 +2,6 @@ import {HttpMethod} from './HttpMethod';
 import {ShowYoutubeInstancesExecutor} from '../Executors/ShowYoutubeInstancesExecutor';
 import {EndpointDefinition} from '../EndpointDefinition';
 import {Parser} from './Parsers/Parser';
-import {Executor} from '../Executors/Executor';
 import {PlayExecutor} from '../Executors/PlayExecutor';
 import {PauseExecutor} from '../Executors/PauseExecutor';
 import {YoutubeInstanceIdParser} from './Parsers/YoutubeInstanceIdParser';
@@ -19,14 +18,6 @@ export interface HttpEndpointDefinition<OPTIONS, RESULT_DATA> extends EndpointDe
     route: string;
     method: HttpMethod;
     parser?: Parser<OPTIONS>;
-}
-
-function use<OPTIONS, RESULT_DATA>(parser: Parser<OPTIONS>, executor: Executor<OPTIONS, RESULT_DATA>): { parser?: Parser<OPTIONS>, executor: Executor<OPTIONS, RESULT_DATA> };
-function use<RESULT_DATA>(executor: Executor<undefined, RESULT_DATA>): { executor: Executor<undefined, RESULT_DATA> };
-
-function use<OPTIONS, RESULT_DATA>(...args: any[]): { parser?: Parser<OPTIONS>, executor: Executor<OPTIONS, RESULT_DATA> }
-{
-    return args.length === 1 ? {executor: args[0]} : {parser: args[0], executor: args[1]};
 }
 
 export interface Parsers

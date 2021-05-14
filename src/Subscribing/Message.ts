@@ -1,4 +1,4 @@
-export type MessageType = "InitiateSyncMessage" | "YoutubeInstanceAdded" | "YoutubeInstanceRemoved" | "YoutubeInstanceChanged";
+export type MessageType = "InitialSyncMessage" | "YoutubeInstanceAdded" | "YoutubeInstanceRemoved" | "YoutubeInstanceChanged";
 
 export interface Message
 {

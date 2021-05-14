@@ -1,1 +1,1 @@
-export type YoutubeInstanceId = number;
+export type YoutubeInstanceId = string;

@@ -2,6 +2,7 @@ import * as WebSocket from 'ws';
 import {YoutubeInstancesManager} from './YoutubeInstancesManager';
 import {YoutubeInstanceBuilder} from "./YoutubeInstanceBuilder";
 import {YoutubeInstanceCommander} from "./YoutubeInstanceCommander";
+import {v4 as uuidv4} from 'uuid';
 
 export class YoutubeInstanceWebSocketServer
 {
@@ -21,7 +22,7 @@ export class YoutubeInstanceWebSocketServer
     {
         this.server.on('connection', (client, request) => {
             console.debug(`new connection from ${request.connection.remoteAddress}:${request.connection.remotePort}`);
-            const youtubeInstance = this.youtubeInstanceBuilder.build(request.connection.remotePort, this.buildCommander(client));
+            const youtubeInstance = this.youtubeInstanceBuilder.build(uuidv4(), this.buildCommander(client));
             this.youtubeInstancesManager.addYoutubeInstance(youtubeInstance);
 
             client.on('message', (rawMessage: string) => {

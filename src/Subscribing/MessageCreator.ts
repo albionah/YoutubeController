@@ -15,7 +15,7 @@ export class MessageCreator
     public async createInitialSyncMessage(): Promise<Message>
     {
         const data = await this.showYoutubeInstancesExecutor.execute();
-        return {type: "InitiateSyncMessage", data};
+        return {type: "InitialSyncMessage", data};
     }
 
     public createYoutubeInstanceAddedMessage(id: YoutubeInstanceId): Message

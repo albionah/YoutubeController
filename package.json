@@ -16,6 +16,7 @@
   "dependencies": {
     "axios": "^0.21.0",
     "http-status-codes": "^1.4.0",
+    "uuid": "^8.3.2",
     "ws": "^7.4.1",
     "youtube-music-api": "github:valeriangalliat/youtube-music-api#update-search-parser"
   },

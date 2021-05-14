@@ -3,8 +3,9 @@ import {IncomingMessage} from "http";
 import {Parser} from "./Parser";
 import {JsonBodyDataGetter} from "./JsonBodyDataGetter";
 import {VideoId} from "../../../DataTypes/VideoId";
+import {YoutubeInstanceId} from "../../../DataTypes/YoutubeInstanceId";
 
-export class VideoIdAndYoutubeInstanceParser extends YoutubeInstanceIdParser implements Parser<{ id: number, videoId: VideoId }>
+export class VideoIdAndYoutubeInstanceParser extends YoutubeInstanceIdParser implements Parser<{ id: YoutubeInstanceId, videoId: VideoId }>
 {
     private readonly jsonBodyDataGetter: JsonBodyDataGetter;
 
@@ -14,7 +15,7 @@ export class VideoIdAndYoutubeInstanceParser extends YoutubeInstanceIdParser imp
         this.jsonBodyDataGetter = jsonBodyDataGetter;
     }
 
-    public async parse(request: IncomingMessage): Promise<{ id: number, videoId: VideoId }>
+    public async parse(request: IncomingMessage): Promise<{ id: YoutubeInstanceId, videoId: VideoId }>
     {
         const body = await this.jsonBodyDataGetter.getBodyData(request);
         const videoId = body.videoId;
