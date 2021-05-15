@@ -25,7 +25,7 @@ Events can be subscribed via
 
 ### Event types
 There are 4 types
-- InitialSyncMessage - once the connection is established you receive this message inform about all youtube instances
+- InitialSyncMessage - once the connection is established you receive this message informs about all youtube instances
 - YoutubeInstanceAdded - once the user open new tab in browser with youtube
 - YoutubeInstanceRemoved - once the user close the youtube tab
 - YoutubeInstanceChanged - once video is paused, played or switched to another video
