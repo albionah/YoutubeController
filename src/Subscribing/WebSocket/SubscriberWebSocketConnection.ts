@@ -3,6 +3,7 @@ import {IncomingMessage} from "http";
 
 type SendFn = (message: object) => void;
 
+// TODO: remove this class
 export class SubscriberWebSocketConnection
 {
     private readonly controller;

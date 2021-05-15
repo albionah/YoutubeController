@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "serve-browser-code": "rollup -c browserCode/rollup.config.js --watch",
-    "start-dev": "ts-node src/main.ts",
+    "test": "mocha --config mocha.json",
+    "start-dev": "npm run start-development",
     "start-development": "ts-node src/main.ts",
     "start-production": "node dist/main.js",
     "deploy": "rimraf node_modules && npm install && tsc && rimraf node_modules && npm install --production"
@@ -21,8 +20,11 @@
     "youtube-music-api": "^1.0.6"
   },
   "devDependencies": {
+    "@types/mocha": "^8.2.2",
     "@types/ws": "^7.4.4",
-    "typescript": "^4.2.4",
-    "ts-node": "^9.1.1"
+    "chai": "^4.3.4",
+    "mocha": "^8.4.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4"
   }
 }

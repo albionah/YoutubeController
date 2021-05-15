@@ -1,0 +1,12 @@
+{
+  "require": "ts-node/register",
+  "watch-extensions": [
+    "ts"
+  ],
+  "diff": true,
+  "ui": "bdd",
+  "exit": true,
+  "spec": [
+    "src/**/*.UnitTest.ts"
+  ]
+}

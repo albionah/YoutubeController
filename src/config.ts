@@ -1,5 +1,8 @@
 export const config = {
-    serverApi: {port: 2345, maxUploadTimeInMs: 1000},
-    reportServer: {port: 9989},
-    browser: {port: 7789}
+    browserConnection: {port: 7789},
+    controllingApi: {port: 7790, maxUploadTimeInMs: 1000},
+    subscribing: {
+        websocket: {port: 7791},
+        tcp: {port: 7792}
+    }
 };

@@ -22,6 +22,7 @@ import {SubscribersManager} from "./Subscribing/SubscribersManager";
 import {MessageCreator} from "./Subscribing/MessageCreator";
 import {YoutubeController} from "./YoutubeController";
 import {EventPublisher} from "./Subscribing/EventPublisher";
+import {SubscriberTCPServer} from "./Subscribing/TCP/SubscriberTCPServer";
 
 const youtubeController = new YoutubeController();
 const messageCreator = new MessageCreator(new ShowYoutubeInstancesExecutor(youtubeController));
@@ -31,7 +32,7 @@ const eventProducingYoutubeController = new EventProducingYoutubeController(yout
 
 const httpApi = new HttpApi(getHttpEndpointDefinitions({
         youtubeInstanceIdParser: new YoutubeInstanceIdParser(),
-        videoIdAndYoutubeInstanceParser: new VideoIdAndYoutubeInstanceParser(new JsonBodyDataGetter(config.serverApi.maxUploadTimeInMs)),
+        videoIdAndYoutubeInstanceParser: new VideoIdAndYoutubeInstanceParser(new JsonBodyDataGetter(config.controllingApi.maxUploadTimeInMs)),
         queryParser: new QueryParser()
     },
     {
@@ -47,14 +48,15 @@ const httpApi = new HttpApi(getHttpEndpointDefinitions({
 const httpServer = http.createServer(async (request, response) => {
     console.debug("handling request");
     const responseOptions = await httpApi.handle(request);
-    console.log(`responding with ${JSON.stringify(responseOptions)}`);
+    console.debug(`responding with ${JSON.stringify(responseOptions)}`);
     response.setHeader('Content-Type', 'application/json; charset=utf-8');
     response.setHeader('Access-Control-Allow-Origin', '*');
     response.statusCode = responseOptions.statusCode;
     response.end(JSON.stringify(responseOptions.data));
 });
 
-httpServer.listen(config.serverApi.port);
+httpServer.listen(config.controllingApi.port);
 const youtubeInstanceBuilder = new EventProducingYoutubeInstanceBuilder(eventPublisher);
-new YoutubeInstanceWebSocketServer(eventProducingYoutubeController, youtubeInstanceBuilder, config.browser);
-new SubscriberWebSocketServer(config.reportServer, subscriberManager);
+new YoutubeInstanceWebSocketServer(eventProducingYoutubeController, youtubeInstanceBuilder, config.browserConnection);
+new SubscriberWebSocketServer(config.subscribing.websocket, subscriberManager);
+new SubscriberTCPServer(config.subscribing.tcp, subscriberManager);
