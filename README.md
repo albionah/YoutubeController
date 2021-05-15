@@ -2,7 +2,10 @@
 It allows controlling Youtube webpage via API remotely including multiprotocol subscription of events.
 
 ## Requirements
-You need to inject (this script)[https://github.com/albionah/YoutubeApiExposer] into your browser. After that, you need to run this application. Both the browser and this application need to run on the same computer because of CORS limitation, or you can forward websocket connection (coming from browser) to another computer.
+You need to inject [this script](https://github.com/albionah/YoutubeApiExposer) into your browser. After that, you need to run this application. Both the browser and this application need to run on the same computer because of CORS limitation, or you can forward websocket connection (coming from browser) to another computer.
+
+## Schema
+![schema](https://github.com/albionah/YoutubeApiExposer/blob/master/schema.png)
 
 ## It supports
 - list all youtube instances in your browser(s),
