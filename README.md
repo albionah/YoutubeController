@@ -13,24 +13,26 @@ You need to inject [this script](https://github.com/albionah/YoutubeApiExposer) 
 - pause,
 - watch specified video by its ID,
 - watch previous video,
-- watch following video,
+- watch next video,
 - subscribing events.
 
 ## Controlling
-Only protocol HTTP is supported by now. 
+Only protocol HTTP is supported for now. 
 
 ## Subscribing events
 To make the controlling almost realtime, every change in the browser like video was paused etc. generate a JSON event which is published via subscribing streams.
+
 Note: video progress does not produce events. It could be assumed that not paused video increases its progress.
+
 Events can be subscribed via
 - websocket,
 - TCP (every message is stringified JSON terminated by binary 0 (null terminated string)).
 
 ### Event types
 There are 4 types
-- InitialSyncMessage - once the connection is established you receive this message informs about all youtube instances
-- YoutubeInstanceAdded - once the user open new tab in browser with youtube
-- YoutubeInstanceRemoved - once the user close the youtube tab
+- InitialSyncMessage - once the connection is established, informs about all youtube instances
+- YoutubeInstanceAdded - once the user opens new tab in browser with youtube
+- YoutubeInstanceRemoved - once the user closes the youtube tab
 - YoutubeInstanceChanged - once video is paused, played or switched to another video
 
 ## Installation and start
