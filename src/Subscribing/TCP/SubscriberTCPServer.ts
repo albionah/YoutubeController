@@ -18,13 +18,17 @@ export class SubscriberTCPServer
     private setupServer(): void
     {
         this.server.on('connection', (socket) => {
-            console.log("new TCP connection");
+            console.debug("new TCP connection");
             const subscriber = new TCPSubscriber(socket);
             this.subscriberManager.addSubscriber(subscriber);
             socket.on("close", () => {
+                console.debug("closing TCP connection");
                 this.subscriberManager.removeSubscriber(subscriber);
             });
+            socket.on("error", (error) => {
+                console.error(`Connection error: ${error.message}`);
+            });
         });
-        this.server.on('error', ((error) => console.error(error.message)));
+        this.server.on('error', ((error) => console.error(`Server error: ${error.message}`)));
     }
 }

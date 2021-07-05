@@ -17,9 +17,17 @@ describe(TCPSubscriber.name, () => {
         });
 
         it('should produce JSON parsable string (ignoring null terminating character at the end)', async () => {
-            const message: Message = {type: "InitialSyncMessage", data: {test: "json", number: 55}};
+            const message: Message = {type: "InitialSyncMessage", data: {test: "json", number: 55, veryLongPropertyKey: "VeryLongPropertyValueVeryLongPropertyValueVeryLongPropertyValueVeryLongPropertyValueVeryLongPropertyValueVeryLongPropertyValueVeryLongPropertyValueVeryLongPropertyValue"}};
             await subscriber.sendMessage(message);
             expect(message).to.be.deep.equal(JSON.parse(writtenBuffer.slice(0, -1).toString()));
+        });
+
+        describe('and message contains special characters', () => {
+            it('should keep them', async () => {
+                const message: Message = {type: "InitialSyncMessage", data: {"title":"Mambo - REMIX 2020 (ěščřžýáíé Эту песню ищут все)"}};
+                await subscriber.sendMessage(message);
+                expect(message).to.be.deep.equal(JSON.parse(writtenBuffer.slice(0, -1).toString()));
+            });
         });
     });
 

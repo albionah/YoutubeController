@@ -18,18 +18,18 @@ export class MessageCreator
         return {type: "InitialSyncMessage", data};
     }
 
-    public createYoutubeInstanceAddedMessage(id: YoutubeInstanceId): Message
+    public createYoutubeInstanceAddedMessage(youtubeInstanceId: YoutubeInstanceId): Message
     {
-        return {type: "YoutubeInstanceAdded", data: {id}};
+        return {type: "YoutubeInstanceAdded", data: {youtubeInstanceId}};
     }
 
-    public createYoutubeInstanceRemovedMessage(id: YoutubeInstanceId): Message
+    public createYoutubeInstanceRemovedMessage(youtubeInstanceId: YoutubeInstanceId): Message
     {
-        return {type: "YoutubeInstanceRemoved", data: {id}};
+        return {type: "YoutubeInstanceRemoved", data: {youtubeInstanceId}};
     }
 
-    public createYoutubeInstanceChangedMessage(id: YoutubeInstanceId, videoInfo: VideoInfo): Message
+    public createYoutubeInstanceChangedMessage(youtubeInstanceId: YoutubeInstanceId, videoInfo: VideoInfo): Message
     {
-        return {type: "YoutubeInstanceChanged", data: {id, videoInfo}};
+        return {type: "YoutubeInstanceChanged", data: {youtubeInstanceId, videoInfo}};
     }
 }

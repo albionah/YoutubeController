@@ -26,9 +26,6 @@ export class TCPSubscriber implements Subscriber
     private getRawData(message: Message): Buffer
     {
         const stringifiedMessage = JSON.stringify(message);
-        const buffer = Buffer.alloc(stringifiedMessage.length + TCPSubscriber.nullTerminatingCharacter.length);
-        buffer.write(stringifiedMessage);
-        TCPSubscriber.nullTerminatingCharacter.copy(buffer, stringifiedMessage.length);
-        return buffer;
+        return Buffer.concat([Buffer.from(stringifiedMessage), TCPSubscriber.nullTerminatingCharacter]);
     }
 }

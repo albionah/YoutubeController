@@ -7,7 +7,7 @@ import {PlayExecutor} from './Controlling/Executors/PlayExecutor';
 import {PauseExecutor} from './Controlling/Executors/PauseExecutor';
 import {YoutubeInstanceWebSocketServer} from './BrowserConnection/YoutubeInstanceWebSocketServer';
 import {WatchExecutor} from './Controlling/Executors/WatchExecutor';
-import {VideoIdAndYoutubeInstanceParser} from "./Controlling/HTTP/Parsers/VideoIdAndYoutubeInstanceParser";
+import {VideoIdParser} from "./Controlling/HTTP/Parsers/VideoIdParser";
 import {JsonBodyDataGetter} from "./Controlling/HTTP/Parsers/JsonBodyDataGetter";
 import {WatchPreviousExecutor} from "./Controlling/Executors/WatchPreviousExecutor";
 import {WatchNextExecutor} from "./Controlling/Executors/WatchNextExecutor";
@@ -23,17 +23,23 @@ import {MessageCreator} from "./Subscribing/MessageCreator";
 import {YoutubeController} from "./YoutubeController";
 import {EventPublisher} from "./Subscribing/EventPublisher";
 import {SubscriberTCPServer} from "./Subscribing/TCP/SubscriberTCPServer";
+import {BodyJsonParser} from "./Controlling/HTTP/Parsers/BodyJsonParser";
+import {MultiParser} from "./Controlling/HTTP/Parsers/MultiParser";
 
 const youtubeController = new YoutubeController();
 const messageCreator = new MessageCreator(new ShowYoutubeInstancesExecutor(youtubeController));
 const subscriberManager = new SubscribersManager(messageCreator);
 const eventPublisher = new EventPublisher(messageCreator, subscriberManager);
 const eventProducingYoutubeController = new EventProducingYoutubeController(youtubeController, eventPublisher);
+const bodyJsonParser = new BodyJsonParser(new JsonBodyDataGetter(config.controllingApi.maxUploadTimeInMs));
+const youtubeInstanceIdParser = new YoutubeInstanceIdParser(bodyJsonParser);
+const videoIdParser = new VideoIdParser(bodyJsonParser);
+const queryParser = new QueryParser();
 
 const httpApi = new HttpApi(getHttpEndpointDefinitions({
-        youtubeInstanceIdParser: new YoutubeInstanceIdParser(),
-        videoIdAndYoutubeInstanceParser: new VideoIdAndYoutubeInstanceParser(new JsonBodyDataGetter(config.controllingApi.maxUploadTimeInMs)),
-        queryParser: new QueryParser()
+        youtubeInstanceIdParser: youtubeInstanceIdParser,
+        queryParser: queryParser,
+        videoIdAndYoutubeInstanceParser: new MultiParser(youtubeInstanceIdParser, videoIdParser)
     },
     {
         showYoutubeInstances: new ShowYoutubeInstancesExecutor(youtubeController),

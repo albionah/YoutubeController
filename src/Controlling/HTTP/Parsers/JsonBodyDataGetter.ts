@@ -17,7 +17,6 @@ export class JsonBodyDataGetter
     {
         this.checkHttpContentType(request);
         const body = await this.waitForBody(request);
-        console.log("body", body.toString());
         return this.parseToJson(body.toString());
     }
 
@@ -51,7 +50,7 @@ export class JsonBodyDataGetter
             return JSON.parse(body);
         } catch (error)
         {
-            throw new Error(`Cannot parse json in body data because of ${error.message}`);
+            throw new Error(`Cannot parse json from body data because of ${error.message}`);
         }
     }
 }

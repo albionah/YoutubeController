@@ -4,14 +4,13 @@ import {EndpointDefinition} from '../EndpointDefinition';
 import {Parser} from './Parsers/Parser';
 import {PlayExecutor} from '../Executors/PlayExecutor';
 import {PauseExecutor} from '../Executors/PauseExecutor';
-import {YoutubeInstanceIdParser} from './Parsers/YoutubeInstanceIdParser';
 import {WatchExecutor} from '../Executors/WatchExecutor';
-import {VideoIdAndYoutubeInstanceParser} from "./Parsers/VideoIdAndYoutubeInstanceParser";
 import {WatchNextExecutor} from "../Executors/WatchNextExecutor";
 import {WatchPreviousExecutor} from "../Executors/WatchPreviousExecutor";
 import {GetAutoCompleteSuggestionsExecutor} from "../Executors/GetAutoCompleteSuggestionsExecutor";
-import {QueryParser} from "./Parsers/QueryParser";
 import {GetSearchResultsExecutor} from "../Executors/GetSearchResultsExecutor";
+import {VideoId} from "../../DataTypes/VideoId";
+import {YoutubeInstanceId} from "../../DataTypes/YoutubeInstanceId";
 
 export interface HttpEndpointDefinition<OPTIONS, RESULT_DATA> extends EndpointDefinition<OPTIONS, RESULT_DATA>
 {
@@ -22,9 +21,9 @@ export interface HttpEndpointDefinition<OPTIONS, RESULT_DATA> extends EndpointDe
 
 export interface Parsers
 {
-    youtubeInstanceIdParser: YoutubeInstanceIdParser,
-    videoIdAndYoutubeInstanceParser: VideoIdAndYoutubeInstanceParser,
-    queryParser: QueryParser
+    youtubeInstanceIdParser: Parser<{ id: YoutubeInstanceId }>,
+    videoIdAndYoutubeInstanceParser: Parser<{ videoId: VideoId, youtubeInstanceId: YoutubeInstanceId }>,
+    queryParser: Parser<{ query: string }>
 }
 
 export interface Executors

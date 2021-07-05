@@ -5,6 +5,6 @@ export class ShowYoutubeInstancesExecutor extends BasicExecutor<undefined, Reado
 {
     public async execute(): Promise<ReadonlyArray<YoutubeInstanceInfo>>
     {
-        return this.youtubeManager.showAll().map((youtubeInstance) => ({instanceId: youtubeInstance.id, video: youtubeInstance.getVideoInfo()}));
+        return this.youtubeManager.showAll().map((youtubeInstance) => ({youtubeInstanceId: youtubeInstance.id, videoInfo: youtubeInstance.getVideoInfo()}));
     }
 }

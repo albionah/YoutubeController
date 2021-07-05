@@ -3,6 +3,6 @@ import {YoutubeInstanceId} from "./YoutubeInstanceId";
 
 export interface YoutubeInstanceInfo
 {
-    instanceId: YoutubeInstanceId;
-    video: VideoInfo;
+    youtubeInstanceId: YoutubeInstanceId;
+    videoInfo: VideoInfo;
 }
