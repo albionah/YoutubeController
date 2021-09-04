@@ -1,6 +1,6 @@
-import {IncomingMessage} from 'http';
+import {HttpRequest} from "../HttpRequest";
 
 export interface Parser<OPTIONS>
 {
-    parse(request: IncomingMessage): Promise<OPTIONS>;
+    parse(request: HttpRequest): Promise<OPTIONS>;
 }

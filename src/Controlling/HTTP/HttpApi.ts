@@ -1,8 +1,8 @@
-import {IncomingMessage} from 'http';
 import {BAD_REQUEST, INTERNAL_SERVER_ERROR, OK} from 'http-status-codes';
 import {HttpEndpointDefinition} from './httpEndpointDefinitions';
 import {HttpResponseOptions} from './HttpResponseOptions';
 import {Url} from '../../Utils/Url';
+import {HttpRequest} from "./HttpRequest";
 
 export class HttpApi
 {
@@ -13,7 +13,7 @@ export class HttpApi
         this.endpoints = this.transformEndpoints(endpointDefinitions);
     }
 
-    public async handle(request: IncomingMessage): Promise<HttpResponseOptions<unknown>>
+    public async handle(request: HttpRequest): Promise<HttpResponseOptions<unknown>>
     {
         console.log(request.url);
         try

@@ -33,6 +33,7 @@ export class BrowserYoutubeInstance implements YoutubeInstance
 
     public onVideoInfoReceived(videoInfo: VideoInfo): void
     {
+        console.debug("onVideoInfoReceived", videoInfo);
         this.videoInfo = {...this.videoInfo, ...videoInfo};
     }
 

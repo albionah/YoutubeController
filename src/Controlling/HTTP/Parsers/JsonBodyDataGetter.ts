@@ -13,10 +13,10 @@ export class JsonBodyDataGetter
         this.maxUploadTimeInMs = maxUploadTimeInMs;
     }
 
-    public async getBodyData(request: IncomingMessage): Promise<Json>
+    public async getBodyData(message: IncomingMessage): Promise<Json>
     {
-        this.checkHttpContentType(request);
-        const body = await this.waitForBody(request);
+        this.checkHttpContentType(message);
+        const body = await this.waitForBody(message);
         return this.parseToJson(body.toString());
     }
 

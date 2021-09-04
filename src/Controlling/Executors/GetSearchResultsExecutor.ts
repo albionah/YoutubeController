@@ -9,14 +9,17 @@ export class GetSearchResultsExecutor implements Executor<{ query: string }, { q
         {
             const api = new YoutubeMusicApi();
             await api.initalize();
-            const response = await api.search(query);
-            console.log(response);
+            const response = await api.search(query, "SONG");
+            console.debug(response);
             return {
                 query,
-                results: response.content.filter((item) => item.type === "song").map((item) => ({
-                    id: item.videoId,
-                    title: item.name
-                }))
+                results: response.content
+                    .filter((item) => item.type === "song")
+                    .map((item) => ({
+                        id: item.videoId,
+                        title: item.name,
+                        ...item
+                    }))
             };
         } catch (error)
         {

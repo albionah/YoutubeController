@@ -1,5 +1,5 @@
 import {Parser} from "./Parser";
-import {IncomingMessage} from "http";
+import {HttpRequest} from "../HttpRequest";
 
 type Await<T> = T extends Promise<infer PT> ? PT : never;
 
@@ -12,7 +12,7 @@ export class MultiParser<PARSERS extends ReadonlyArray<Parser<object>>, PARSED_V
         this.parsers = parsers;
     }
 
-    public async parse(request: IncomingMessage): Promise<PARSED_VALUES>
+    public async parse(request: HttpRequest): Promise<PARSED_VALUES>
     {
         const allParsersResults = await Promise.all(this.parsers.map((parser) => parser.parse(request)));
         return Object.assign({}, ...allParsersResults);

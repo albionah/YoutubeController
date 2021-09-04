@@ -6,5 +6,8 @@ export interface VideoInfo
     title: string;
     length: number;
     duration: number;
-    currentPosition: number;
+    currentPosition: {
+        position: number,
+        timestamp: number
+    };
 }

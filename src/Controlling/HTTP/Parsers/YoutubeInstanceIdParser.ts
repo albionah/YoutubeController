@@ -1,24 +1,16 @@
-import {IncomingMessage} from 'http';
 import {Parser} from './Parser';
 import {YoutubeInstanceId} from "../../../DataTypes/YoutubeInstanceId";
-import {BodyJsonParser} from "./BodyJsonParser";
+import {MissingParameterInBodyData} from "./Errors/MissingParameterInBodyData";
+import {HttpRequest} from "../HttpRequest";
 
 export class YoutubeInstanceIdParser implements Parser<{id: YoutubeInstanceId}>
 {
     private static readonly parameterName = "youtubeInstanceId";
 
-    private readonly jsonParser: BodyJsonParser<{ youtubeInstanceId?: string }>;
-
-    public constructor(jsonParser: BodyJsonParser<{youtubeInstanceId?: string}>)
+    public async parse(request: HttpRequest): Promise<{ id: YoutubeInstanceId }>
     {
-        this.jsonParser = jsonParser;
-    }
-
-    public async parse(request: IncomingMessage): Promise<{ id: YoutubeInstanceId }>
-    {
-        const json = await this.jsonParser.parse(request);
-        const id = json[YoutubeInstanceIdParser.parameterName];
-        if (id === undefined) throw new Error(`Missing '${YoutubeInstanceIdParser.parameterName}' in body data.`);
+        const id = request.body[YoutubeInstanceIdParser.parameterName];
+        if (id === undefined) throw new MissingParameterInBodyData(YoutubeInstanceIdParser.parameterName);
         return {id};
     }
 }

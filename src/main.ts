@@ -23,17 +23,18 @@ import {MessageCreator} from "./Subscribing/MessageCreator";
 import {YoutubeController} from "./YoutubeController";
 import {EventPublisher} from "./Subscribing/EventPublisher";
 import {SubscriberTCPServer} from "./Subscribing/TCP/SubscriberTCPServer";
-import {BodyJsonParser} from "./Controlling/HTTP/Parsers/BodyJsonParser";
 import {MultiParser} from "./Controlling/HTTP/Parsers/MultiParser";
+import {HttpRequestBuilder} from "./httpRequestBuilder";
 
 const youtubeController = new YoutubeController();
 const messageCreator = new MessageCreator(new ShowYoutubeInstancesExecutor(youtubeController));
 const subscriberManager = new SubscribersManager(messageCreator);
 const eventPublisher = new EventPublisher(messageCreator, subscriberManager);
 const eventProducingYoutubeController = new EventProducingYoutubeController(youtubeController, eventPublisher);
-const bodyJsonParser = new BodyJsonParser(new JsonBodyDataGetter(config.controllingApi.maxUploadTimeInMs));
-const youtubeInstanceIdParser = new YoutubeInstanceIdParser(bodyJsonParser);
-const videoIdParser = new VideoIdParser(bodyJsonParser);
+const jsonBodyDataGetter = new JsonBodyDataGetter(config.controllingApi.maxUploadTimeInMs);
+const httpRequestBuilder = new HttpRequestBuilder(jsonBodyDataGetter);
+const youtubeInstanceIdParser = new YoutubeInstanceIdParser();
+const videoIdParser = new VideoIdParser();
 const queryParser = new QueryParser();
 
 const httpApi = new HttpApi(getHttpEndpointDefinitions({
@@ -51,8 +52,10 @@ const httpApi = new HttpApi(getHttpEndpointDefinitions({
         getAutoCompleteSuggestions: new GetAutoCompleteSuggestionsExecutor(),
         getSearchResults: new GetSearchResultsExecutor()
     }));
-const httpServer = http.createServer(async (request, response) => {
+const httpServer = http.createServer(async (message, response) => {
     console.debug("handling request");
+    const request = await httpRequestBuilder.build(message);
+    console.debug(request);
     const responseOptions = await httpApi.handle(request);
     console.debug(`responding with ${JSON.stringify(responseOptions)}`);
     response.setHeader('Content-Type', 'application/json; charset=utf-8');
