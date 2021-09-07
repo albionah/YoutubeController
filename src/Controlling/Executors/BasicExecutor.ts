@@ -1,7 +1,7 @@
 import {YoutubeInstanceAccessor} from '../../DataTypes/YoutubeInstanceAccessor';
 import {Executor} from './Executor';
 
-export abstract class BasicExecutor<OPTIONS, RESULT_DATA> implements Executor<OPTIONS, RESULT_DATA>
+export abstract class BasicExecutor<RESULT_DATA> implements Executor<RESULT_DATA>
 {
     protected readonly youtubeManager: YoutubeInstanceAccessor;
 
@@ -10,5 +10,5 @@ export abstract class BasicExecutor<OPTIONS, RESULT_DATA> implements Executor<OP
         this.youtubeManager = youtubeManager;
     }
 
-    public abstract execute(options: OPTIONS): Promise<RESULT_DATA>;
+    public abstract execute(): Promise<RESULT_DATA>;
 }

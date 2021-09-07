@@ -1,7 +1,8 @@
-import {HttpMethod} from "./Controlling/HTTP/HttpMethod";
-import {JsonBodyDataGetter} from "./Controlling/HTTP/Parsers/JsonBodyDataGetter";
+import {HttpMethod} from "./HttpMethod";
+import {JsonBodyDataGetter} from "./Parsers/JsonBodyDataGetter";
 import {IncomingMessage} from "http";
-import {HttpRequest} from "./Controlling/HTTP/HttpRequest";
+import {HttpRequest} from "./HttpRequest";
+import {UnknownMethod} from "./UnknownMethod";
 
 export class HttpRequestBuilder
 {
@@ -23,16 +24,16 @@ export class HttpRequestBuilder
         };
     }
 
-    private isBodySupportingMethod(method: HttpMethod): boolean
+    private isBodySupportingMethod(currentMethod: HttpMethod): boolean
     {
-        return HttpRequestBuilder.bodySupportingMethods.some((b) => b === method);
+        return HttpRequestBuilder.bodySupportingMethods.some((method) => method === currentMethod);
     }
 
     private getMethod(message: IncomingMessage)
     {
         if (!Object.values(HttpMethod).some((method) => message.method === method))
         {
-            throw new Error("Request contains unsupported method");
+            throw new UnknownMethod(message.method);
         }
         return HttpMethod[message.method];
     }

@@ -1,11 +1,23 @@
-import {BasicExecutor} from './BasicExecutor';
 import {VideoId} from "../../DataTypes/VideoId";
 import {YoutubeInstanceId} from "../../DataTypes/YoutubeInstanceId";
+import {Executor} from "./Executor";
+import {YoutubeInstanceAccessor} from "../../DataTypes/YoutubeInstanceAccessor";
 
-export class WatchExecutor extends BasicExecutor<{id: YoutubeInstanceId, videoId: VideoId}, void>
+export class WatchExecutor implements Executor<void>
 {
-    public async execute({id, videoId}: {id: YoutubeInstanceId, videoId: VideoId}): Promise<void>
+    private readonly youtubeManager: YoutubeInstanceAccessor;
+    private readonly youtubeInstanceId: YoutubeInstanceId;
+    private readonly videoId: VideoId;
+
+    public constructor(youtubeManager: YoutubeInstanceAccessor, {youtubeInstanceId, videoId}: {youtubeInstanceId: YoutubeInstanceId, videoId: VideoId})
     {
-        await this.youtubeManager.get(id).watch(videoId);
+        this.youtubeManager = youtubeManager;
+        this.youtubeInstanceId = youtubeInstanceId;
+        this.videoId = videoId;
+    }
+
+    public async execute(): Promise<void>
+    {
+        await this.youtubeManager.get(this.youtubeInstanceId).watch(this.videoId);
     }
 }

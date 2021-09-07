@@ -22,7 +22,7 @@ export class JsonBodyDataGetter
 
     private checkHttpContentType(request: IncomingMessage): void
     {
-        if (request.headers['content-type'].toLowerCase() !== 'application/json')
+        if (request.headers['content-type']?.toLowerCase() !== 'application/json')
         {
             throw new UnsupportedHttpContentType(request.headers['content-type']);
         }

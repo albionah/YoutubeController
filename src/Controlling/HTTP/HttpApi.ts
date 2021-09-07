@@ -1,54 +1,50 @@
-import {BAD_REQUEST, INTERNAL_SERVER_ERROR, OK} from 'http-status-codes';
-import {HttpEndpointDefinition} from './httpEndpointDefinitions';
+import {INTERNAL_SERVER_ERROR, METHOD_NOT_ALLOWED, NOT_FOUND, OK} from 'http-status-codes';
 import {HttpResponseOptions} from './HttpResponseOptions';
-import {Url} from '../../Utils/Url';
-import {HttpRequest} from "./HttpRequest";
+import {UnknownRoute} from "./ExecutorBuilders/Errors/UnknownRoute";
+import {UnsupportedMethod} from "./ExecutorBuilders/Errors/UnsupportedMethod";
+import {ExecutorBuilder} from "./ExecutorBuilders/ExecutorBuilder";
+import {HttpRequestBuilder} from "./HttpRequestBuilder";
+import {IncomingMessage} from "http";
 
 export class HttpApi
 {
-    private readonly endpoints: { [key: string]: HttpEndpointDefinition<unknown, unknown> };
+    private readonly httpRequestBuilder: HttpRequestBuilder;
+    private readonly executorBuilder: ExecutorBuilder<any>;
 
-    public constructor(endpointDefinitions: Iterable<HttpEndpointDefinition<unknown, unknown>>)
+    public constructor(httpRequestBuilder: HttpRequestBuilder, executorBuilder: ExecutorBuilder<any>)
     {
-        this.endpoints = this.transformEndpoints(endpointDefinitions);
+        this.httpRequestBuilder = httpRequestBuilder;
+        this.executorBuilder = executorBuilder;
     }
 
-    public async handle(request: HttpRequest): Promise<HttpResponseOptions<unknown>>
+    public async handle(message: IncomingMessage): Promise<HttpResponseOptions<unknown>>
     {
-        console.log(request.url);
         try
         {
-            const matchEndpoint = this.endpoints[new Url(request.url).route];
-            if (matchEndpoint)
-            {
-                if (request.method === matchEndpoint.method)
-                {
-                    try
-                    {
-                        const options = await matchEndpoint.parser?.parse(request);
-                        return {statusCode: OK, data: await matchEndpoint.executor.execute(options) ?? {}};
-                    } catch (error)
-                    {
-                        return {statusCode: INTERNAL_SERVER_ERROR, data: {error: error.message}};
-                    }
-                } else return {
-                    statusCode: BAD_REQUEST,
-                    data: {error: `Method '${request.method}' on route '${request.url}' is not supported.`}
-                };
-            } else return {statusCode: BAD_REQUEST, data: {error: `Route '${request.url}' is unknown.`}};
+            console.debug("handling request", `${message.method} ${message.url}`);
+            const request = await this.httpRequestBuilder.build(message);
+            const executor = await this.executorBuilder.build(request);
+            const data = await executor.execute();
+            return {statusCode: OK, data: data ?? {}};
         } catch (error)
         {
-            return {statusCode: INTERNAL_SERVER_ERROR, data: {error: error.message}};
+            return this.handleError(error);
         }
     }
 
-    private transformEndpoints(endpointDefinitions: Iterable<HttpEndpointDefinition<unknown, unknown>>): { [key: string]: HttpEndpointDefinition<unknown, unknown> }
+    private handleError(error: Error): HttpResponseOptions<unknown>
     {
-        const endpoints = {};
-        for (const endpointDefinition of endpointDefinitions)
+        if (error instanceof UnknownRoute)
         {
-            endpoints[endpointDefinition.route] = endpointDefinition;
+            return {statusCode: NOT_FOUND, data: {error: error.message}};
         }
-        return endpoints;
+        if (error instanceof UnsupportedMethod)
+        {
+            return {
+                statusCode: METHOD_NOT_ALLOWED,
+                data: {error: error.message}
+            };
+        }
+        return {statusCode: INTERNAL_SERVER_ERROR, data: {error: error.message}};
     }
 }

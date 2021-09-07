@@ -3,14 +3,14 @@ import {YoutubeInstanceId} from "../../../DataTypes/YoutubeInstanceId";
 import {MissingParameterInBodyData} from "./Errors/MissingParameterInBodyData";
 import {HttpRequest} from "../HttpRequest";
 
-export class YoutubeInstanceIdParser implements Parser<{id: YoutubeInstanceId}>
+export class YoutubeInstanceIdParser implements Parser<{youtubeInstanceId: YoutubeInstanceId}>
 {
     private static readonly parameterName = "youtubeInstanceId";
 
-    public async parse(request: HttpRequest): Promise<{ id: YoutubeInstanceId }>
+    public async parse(request: HttpRequest): Promise<{ youtubeInstanceId: YoutubeInstanceId }>
     {
-        const id = request.body[YoutubeInstanceIdParser.parameterName];
-        if (id === undefined) throw new MissingParameterInBodyData(YoutubeInstanceIdParser.parameterName);
-        return {id};
+        const youtubeInstanceId = request.body?.[YoutubeInstanceIdParser.parameterName];
+        if (youtubeInstanceId === undefined) throw new MissingParameterInBodyData(YoutubeInstanceIdParser.parameterName);
+        return {youtubeInstanceId};
     }
 }

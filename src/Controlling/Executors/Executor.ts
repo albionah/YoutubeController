@@ -1,4 +1,4 @@
-export interface Executor<OPTIONS, RESULT_DATA>
+export interface Executor<RESULT_DATA>
 {
-    execute(options: OPTIONS): Promise<RESULT_DATA>;
+    execute(): Promise<RESULT_DATA>;
 }

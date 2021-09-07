@@ -1,13 +1,22 @@
 import {default as axios} from "axios";
 import {Executor} from "./Executor";
 
-export class GetAutoCompleteSuggestionsExecutor implements Executor<{query: string}, {query: string, results: Array<string>}>
+export class GetAutoCompleteSuggestionsExecutor implements Executor<{query: string, results: Array<string>}>
 {
-    public async execute(options: { query: string }): Promise<{ query: string; results: Array<string> }>
+    private static readonly userAgent = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0";
+
+    private readonly query: string;
+
+    public constructor({query}: {query: string})
+    {
+        this.query = query;
+    }
+
+    public async execute(): Promise<{ query: string; results: Array<string> }>
     {
         try
         {
-            const response = await axios.get(`https://clients1.google.com/complete/search?client=youtube&hl=cs&gl=cz&gs_ri=youtube&ds=yt&q=${options.query}`, {headers: {"User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0"}});
+            const response = await axios.get(`https://clients1.google.com/complete/search?client=youtube&hl=cs&gl=cz&gs_ri=youtube&ds=yt&q=${this.query}`, {headers: {"User-Agent": GetAutoCompleteSuggestionsExecutor.userAgent}});
             const firstBracket = response.data.indexOf("(");
             const lastBracket = response.data.lastIndexOf(")");
             const normalizedData = response.data.substring(firstBracket + 1, lastBracket);

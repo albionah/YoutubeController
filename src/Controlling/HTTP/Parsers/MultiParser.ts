@@ -2,8 +2,10 @@ import {Parser} from "./Parser";
 import {HttpRequest} from "../HttpRequest";
 
 type Await<T> = T extends Promise<infer PT> ? PT : never;
+type UnionToIntersection<U> =
+    (U extends any ? (k: U)=>void : never) extends ((k: infer I)=>void) ? I : never;
 
-export class MultiParser<PARSERS extends ReadonlyArray<Parser<object>>, PARSED_VALUES extends Await<ReturnType<PARSERS[number]["parse"]>>> implements Parser<PARSED_VALUES>
+export class MultiParser<PARSERS extends ReadonlyArray<Parser<object>>, PARSED_VALUES extends UnionToIntersection<Await<ReturnType<PARSERS[number]["parse"]>>>> implements Parser<PARSED_VALUES>
 {
     private readonly parsers: PARSERS;
 
