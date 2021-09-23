@@ -1,10 +1,12 @@
-import {INTERNAL_SERVER_ERROR, METHOD_NOT_ALLOWED, NOT_FOUND, OK} from 'http-status-codes';
+import {BAD_REQUEST, INTERNAL_SERVER_ERROR, METHOD_NOT_ALLOWED, NOT_FOUND, OK} from 'http-status-codes';
 import {HttpResponseOptions} from './HttpResponseOptions';
 import {UnknownRoute} from "./ExecutorBuilders/Errors/UnknownRoute";
 import {UnsupportedMethod} from "./ExecutorBuilders/Errors/UnsupportedMethod";
 import {ExecutorBuilder} from "./ExecutorBuilders/ExecutorBuilder";
 import {HttpRequestBuilder} from "./HttpRequestBuilder";
 import {IncomingMessage} from "http";
+import {UnknownCommand} from "./ExecutorBuilders/Errors/UnknownCommand";
+import {MissingParameterInBodyData} from "./Parsers/Errors/MissingParameterInBodyData";
 
 export class HttpApi
 {
@@ -42,6 +44,13 @@ export class HttpApi
         {
             return {
                 statusCode: METHOD_NOT_ALLOWED,
+                data: {error: error.message}
+            };
+        }
+        if (error instanceof MissingParameterInBodyData || error instanceof UnknownCommand)
+        {
+            return {
+                statusCode: BAD_REQUEST,
                 data: {error: error.message}
             };
         }

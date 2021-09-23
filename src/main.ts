@@ -1,6 +1,9 @@
 import * as http from 'http';
 import {HttpApi} from './Controlling/HTTP/HttpApi';
-import {getHttpEndpointDefinitions} from './Controlling/HTTP/httpEndpointDefinitions';
+import {
+    getHttpEndpointDefinitionsForBrowsingVideos,
+    getHttpEndpointDefinitionsForControlling
+} from './Controlling/HTTP/httpEndpointDefinitions';
 import {ShowYoutubeInstancesExecutor} from './Controlling/Executors/ShowYoutubeInstancesExecutor';
 import {YoutubeInstanceIdParser} from './Controlling/HTTP/Parsers/YoutubeInstanceIdParser';
 import {YoutubeInstanceWebSocketServer} from './BrowserConnection/YoutubeInstanceWebSocketServer';
@@ -18,12 +21,6 @@ import {EventPublisher} from "./Subscribing/EventPublisher";
 import {SubscriberTCPServer} from "./Subscribing/TCP/SubscriberTCPServer";
 import {HttpRequestBuilder} from "./Controlling/HTTP/HttpRequestBuilder";
 import {MultiParser} from "./Controlling/HTTP/Parsers/MultiParser";
-import {BasicExecutorBuilder} from "./Controlling/HTTP/ExecutorBuilders/BasicExecutorBuilder";
-import {PlayExecutor} from "./Controlling/Executors/PlayExecutor";
-import {PauseExecutor} from "./Controlling/Executors/PauseExecutor";
-import {WatchExecutor} from "./Controlling/Executors/WatchExecutor";
-import {WatchNextExecutor} from "./Controlling/Executors/WatchNextExecutor";
-import {WatchPreviousExecutor} from "./Controlling/Executors/WatchPreviousExecutor";
 import {CommandParser} from "./Controlling/HTTP/Parsers/CommandParser";
 import {GeneralExecutorBuilder} from "./Controlling/HTTP/ExecutorBuilders/GeneralExecutorBuilder";
 
@@ -42,14 +39,11 @@ const parsers = {
     videoIdAndYoutubeInstanceParser: new MultiParser(youtubeInstanceIdParser, videoIdParser),
     commandParser: new CommandParser()
 };
-const commandExecutorBuilders = {
-    play: new BasicExecutorBuilder(PlayExecutor, youtubeController, parsers.youtubeInstanceIdParser),
-    pause: new BasicExecutorBuilder(PauseExecutor, youtubeController, parsers.youtubeInstanceIdParser),
-    watch: new BasicExecutorBuilder(WatchExecutor, youtubeController, parsers.videoIdAndYoutubeInstanceParser),
-    "watch-next": new BasicExecutorBuilder(WatchNextExecutor, youtubeController, parsers.youtubeInstanceIdParser),
-    "watch-previous": new BasicExecutorBuilder(WatchPreviousExecutor, youtubeController, parsers.youtubeInstanceIdParser),
-};
-const generalExecutorBuilder = new GeneralExecutorBuilder(getHttpEndpointDefinitions(youtubeController, parsers, commandExecutorBuilders));
+
+const generalExecutorBuilder = new GeneralExecutorBuilder([
+    ...getHttpEndpointDefinitionsForControlling(youtubeController, parsers),
+    ...getHttpEndpointDefinitionsForBrowsingVideos(parsers)
+]);
 const httpApi = new HttpApi(httpRequestBuilder, generalExecutorBuilder);
 
 const httpServer = http.createServer(async (message, response) => {
