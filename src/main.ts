@@ -1,16 +1,13 @@
 import * as http from 'http';
 import {HttpApi} from './Controlling/HTTP/HttpApi';
 import {
-    getHttpEndpointDefinitionsForBrowsingVideos,
-    getHttpEndpointDefinitionsForControlling
+    getHttpEndpointDefinitionsForControlling,
+    getHttpEndpointDefinitionsForSearchingVideos
 } from './Controlling/HTTP/httpEndpointDefinitions';
 import {ShowYoutubeInstancesExecutor} from './Controlling/Executors/ShowYoutubeInstancesExecutor';
-import {YoutubeInstanceIdParser} from './Controlling/HTTP/Parsers/YoutubeInstanceIdParser';
 import {YoutubeInstanceWebSocketServer} from './BrowserConnection/YoutubeInstanceWebSocketServer';
-import {VideoIdParser} from "./Controlling/HTTP/Parsers/VideoIdParser";
 import {JsonBodyDataGetter} from "./Controlling/HTTP/Parsers/JsonBodyDataGetter";
 import {config} from "./config";
-import {QueryParser} from "./Controlling/HTTP/Parsers/QueryParser";
 import {EventProducingYoutubeInstanceBuilder} from "./Subscribing/EventProducingYoutubeInstanceBuilder";
 import {SubscriberWebSocketServer} from "./Subscribing/WebSocket/SubscriberWebSocketServer";
 import {EventProducingYoutubeController} from "./Subscribing/EventProducingYoutubeController";
@@ -20,8 +17,6 @@ import {YoutubeController} from "./YoutubeController";
 import {EventPublisher} from "./Subscribing/EventPublisher";
 import {SubscriberTCPServer} from "./Subscribing/TCP/SubscriberTCPServer";
 import {HttpRequestBuilder} from "./Controlling/HTTP/HttpRequestBuilder";
-import {MultiParser} from "./Controlling/HTTP/Parsers/MultiParser";
-import {CommandParser} from "./Controlling/HTTP/Parsers/CommandParser";
 import {GeneralExecutorBuilder} from "./Controlling/HTTP/ExecutorBuilders/GeneralExecutorBuilder";
 
 const youtubeController = new YoutubeController();
@@ -31,18 +26,10 @@ const eventPublisher = new EventPublisher(messageCreator, subscriberManager);
 const eventProducingYoutubeController = new EventProducingYoutubeController(youtubeController, eventPublisher);
 const jsonBodyDataGetter = new JsonBodyDataGetter(config.controllingApi.maxUploadTimeInMs);
 const httpRequestBuilder = new HttpRequestBuilder(jsonBodyDataGetter);
-const youtubeInstanceIdParser = new YoutubeInstanceIdParser();
-const videoIdParser = new VideoIdParser();
-const parsers = {
-    youtubeInstanceIdParser: youtubeInstanceIdParser,
-    queryParser: new QueryParser(),
-    videoIdAndYoutubeInstanceParser: new MultiParser(youtubeInstanceIdParser, videoIdParser),
-    commandParser: new CommandParser()
-};
 
 const generalExecutorBuilder = new GeneralExecutorBuilder([
-    ...getHttpEndpointDefinitionsForControlling(youtubeController, parsers),
-    ...getHttpEndpointDefinitionsForBrowsingVideos(parsers)
+    ...getHttpEndpointDefinitionsForControlling(youtubeController),
+    ...getHttpEndpointDefinitionsForSearchingVideos()
 ]);
 const httpApi = new HttpApi(httpRequestBuilder, generalExecutorBuilder);
 

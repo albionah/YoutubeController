@@ -7,6 +7,8 @@ import {HttpRequestBuilder} from "./HttpRequestBuilder";
 import {IncomingMessage} from "http";
 import {UnknownCommand} from "./ExecutorBuilders/Errors/UnknownCommand";
 import {MissingParameterInBodyData} from "./Parsers/Errors/MissingParameterInBodyData";
+import {MissingParameterInQueryString} from "./Parsers/Errors/MissingParameterInQueryString";
+import {EmptyParameter} from "./Parsers/Errors/EmptyParameter";
 
 export class HttpApi
 {
@@ -47,7 +49,12 @@ export class HttpApi
                 data: {error: error.message}
             };
         }
-        if (error instanceof MissingParameterInBodyData || error instanceof UnknownCommand)
+        if (
+            error instanceof MissingParameterInBodyData ||
+            error instanceof MissingParameterInQueryString ||
+            error instanceof EmptyParameter ||
+            error instanceof UnknownCommand
+        )
         {
             return {
                 statusCode: BAD_REQUEST,

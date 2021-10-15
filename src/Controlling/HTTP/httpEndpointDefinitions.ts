@@ -1,8 +1,5 @@
 import {HttpMethod} from './HttpMethod';
 import {ShowYoutubeInstancesExecutor} from '../Executors/ShowYoutubeInstancesExecutor';
-import {Parser} from './Parsers/Parser';
-import {VideoId} from "../../DataTypes/VideoId";
-import {YoutubeInstanceId} from "../../DataTypes/YoutubeInstanceId";
 import {YoutubeManagerExecutorBuilder} from "./ExecutorBuilders/YoutubeManagerExecutorBuilder";
 import {YoutubeInstanceAccessor} from "../../DataTypes/YoutubeInstanceAccessor";
 import {CommandExecutorBuilder} from "./ExecutorBuilders/CommandExecutorBuilder";
@@ -16,16 +13,19 @@ import {PauseExecutor} from "../Executors/PauseExecutor";
 import {WatchExecutor} from "../Executors/WatchExecutor";
 import {WatchNextExecutor} from "../Executors/WatchNextExecutor";
 import {WatchPreviousExecutor} from "../Executors/WatchPreviousExecutor";
+import {YoutubeInstanceIdParser} from "./Parsers/YoutubeInstanceIdParser";
+import {VideoIdParser} from "./Parsers/VideoIdParser";
+import {QueryParser} from "./Parsers/QueryParser";
+import {MultiParser} from "./Parsers/MultiParser";
+import {CommandParser} from "./Parsers/CommandParser";
 
-export interface Parsers
-{
-    youtubeInstanceIdParser: Parser<{ youtubeInstanceId: YoutubeInstanceId }>,
-    videoIdAndYoutubeInstanceParser: Parser<{ videoId: VideoId, youtubeInstanceId: YoutubeInstanceId }>,
-    queryParser: Parser<{ query: string }>,
-    commandParser: Parser<{ command: string }>
-}
+const youtubeInstanceIdParser = new YoutubeInstanceIdParser();
+const queryParser = new QueryParser();
+const videoIdParser = new VideoIdParser();
+const commandParser = new CommandParser()
+const videoIdAndYoutubeInstanceParser = new MultiParser(youtubeInstanceIdParser, videoIdParser);
 
-export function getHttpEndpointDefinitionsForControlling(youtubeManager: YoutubeInstanceAccessor, parsers: Parsers): ReadonlyArray<HttpEndpointDefinition<any, any>>
+export function getHttpEndpointDefinitionsForControlling(youtubeManager: YoutubeInstanceAccessor): ReadonlyArray<HttpEndpointDefinition<any, any>>
 {
     return [
         {
@@ -36,33 +36,33 @@ export function getHttpEndpointDefinitionsForControlling(youtubeManager: Youtube
         {
             method: HttpMethod.POST,
             route: '/youtube-instances/commands',
-            executorBuilder: new CommandExecutorBuilder(parsers.commandParser, getCommandExecutorBuilders(youtubeManager, parsers)),
+            executorBuilder: new CommandExecutorBuilder(commandParser, getCommandExecutorBuilders(youtubeManager)),
         }
     ];
 }
 
-export function getHttpEndpointDefinitionsForBrowsingVideos(parsers: Parsers): ReadonlyArray<HttpEndpointDefinition<any, any>>
+export function getHttpEndpointDefinitionsForSearchingVideos(): ReadonlyArray<HttpEndpointDefinition<any, any>>
 {
     return [
         {
             method: HttpMethod.GET,
             route: '/auto-complete-suggestions',
-            executorBuilder: new BasicExecutorBuilder(GetAutoCompleteSuggestionsExecutor, parsers.queryParser)
+            executorBuilder: new BasicExecutorBuilder(GetAutoCompleteSuggestionsExecutor, queryParser)
         },
         {
             method: HttpMethod.GET,
             route: '/search-results',
-            executorBuilder: new BasicExecutorBuilder(GetSearchResultsExecutor, parsers.queryParser)
+            executorBuilder: new BasicExecutorBuilder(GetSearchResultsExecutor, queryParser)
         }
     ];
 }
 
-function getCommandExecutorBuilders(youtubeManager: YoutubeInstanceAccessor, parsers: Parsers): Record<string, ExecutorBuilder<void>> {
+function getCommandExecutorBuilders(youtubeManager: YoutubeInstanceAccessor): Record<string, ExecutorBuilder<void>> {
     return {
-        play: new YoutubeManagerExecutorBuilder(PlayExecutor, youtubeManager, parsers.youtubeInstanceIdParser),
-        pause: new YoutubeManagerExecutorBuilder(PauseExecutor, youtubeManager, parsers.youtubeInstanceIdParser),
-        watch: new YoutubeManagerExecutorBuilder(WatchExecutor, youtubeManager, parsers.videoIdAndYoutubeInstanceParser),
-        "watch-next": new YoutubeManagerExecutorBuilder(WatchNextExecutor, youtubeManager, parsers.youtubeInstanceIdParser),
-        "watch-previous": new YoutubeManagerExecutorBuilder(WatchPreviousExecutor, youtubeManager, parsers.youtubeInstanceIdParser)
+        play: new YoutubeManagerExecutorBuilder(PlayExecutor, youtubeManager, youtubeInstanceIdParser),
+        pause: new YoutubeManagerExecutorBuilder(PauseExecutor, youtubeManager, youtubeInstanceIdParser),
+        watch: new YoutubeManagerExecutorBuilder(WatchExecutor, youtubeManager, videoIdAndYoutubeInstanceParser),
+        "watch-next": new YoutubeManagerExecutorBuilder(WatchNextExecutor, youtubeManager, youtubeInstanceIdParser),
+        "watch-previous": new YoutubeManagerExecutorBuilder(WatchPreviousExecutor, youtubeManager, youtubeInstanceIdParser)
     }
 }

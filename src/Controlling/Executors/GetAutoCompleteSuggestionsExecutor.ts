@@ -3,7 +3,7 @@ import {Executor} from "./Executor";
 
 export class GetAutoCompleteSuggestionsExecutor implements Executor<{query: string, results: Array<string>}>
 {
-    private static readonly userAgent = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0";
+    private static readonly baseUrl = "https://clients1.google.com/complete/search?client=youtube&hl=cs&gl=cz&gs_ri=youtube&ds=yt";
 
     private readonly query: string;
 
@@ -16,7 +16,7 @@ export class GetAutoCompleteSuggestionsExecutor implements Executor<{query: stri
     {
         try
         {
-            const response = await axios.get(`https://clients1.google.com/complete/search?client=youtube&hl=cs&gl=cz&gs_ri=youtube&ds=yt&q=${this.query}`, {headers: {"User-Agent": GetAutoCompleteSuggestionsExecutor.userAgent}});
+            const response = await axios.get(`${GetAutoCompleteSuggestionsExecutor.baseUrl}&q=${this.query}`);
             const firstBracket = response.data.indexOf("(");
             const lastBracket = response.data.lastIndexOf(")");
             const normalizedData = response.data.substring(firstBracket + 1, lastBracket);
