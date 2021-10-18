@@ -33,6 +33,7 @@ export class YoutubeInstanceWebSocketServer
                 console.debug('closing connection');
                 this.youtubeInstancesManager.removeYoutubeInstance(youtubeInstance);
             });
+            client.on("error", (error) => console.log(error.message));
         });
         this.server.on('error', ((error) => console.error(error.message)));
     }
