@@ -21,21 +21,25 @@ export class YoutubeInstanceWebSocketServer
     private setupServer(): void
     {
         this.server.on('connection', (client, request) => {
-            console.debug(`new connection from ${request.connection.remoteAddress}:${request.connection.remotePort}`);
+            console.debug(`new connection from ${request.socket.remoteAddress}:${request.socket.remotePort}`);
             const youtubeInstance = this.youtubeInstanceBuilder.build(uuidv4(), this.buildCommander(client));
             this.youtubeInstancesManager.addYoutubeInstance(youtubeInstance);
 
             client.on('message', (rawMessage: string) => {
                 youtubeInstance.onVideoInfoReceived(JSON.parse(rawMessage));
-                console.debug(rawMessage);
+                console.debug(`incoming message from ${request.socket.remoteAddress}:${request.socket.remotePort}: ${rawMessage}`);
             });
             client.on('close', (code, reason) => {
-                console.debug('closing connection');
+                console.debug('closing connection coming from ${request.socket.remoteAddress}:${request.socket.remotePort}');
                 this.youtubeInstancesManager.removeYoutubeInstance(youtubeInstance);
             });
-            client.on("error", (error) => console.log(error.message));
+            client.on("error", (error) => {
+                console.error(`an error happened from connection ${request.socket.remoteAddress}:${request.socket.remotePort} because of ${error.message}`);
+                this.youtubeInstancesManager.removeYoutubeInstance(youtubeInstance);
+                client.terminate();
+            });
         });
-        this.server.on('error', ((error) => console.error(error.message)));
+        this.server.on('error', ((error) => console.error(`websocket server failed because of ${error.message}`)));
     }
 
     private buildCommander(client: WebSocket): YoutubeInstanceCommander

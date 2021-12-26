@@ -1,7 +1,8 @@
 import {Executor} from "./Executor";
-import * as YoutubeMusicApi from "youtube-music-api";
+import {MusicYoutubeSearcher} from "./VideoSearcher/MusicYoutubeSearcher";
 
-export class GetSearchResultsExecutor implements Executor<{ query: string, results: Array<object> }>
+
+export class GetSearchResultsExecutor implements Executor<{ query: string, results: ReadonlyArray<object> }>
 {
     private readonly query: string;
 
@@ -10,27 +11,11 @@ export class GetSearchResultsExecutor implements Executor<{ query: string, resul
         this.query = query;
     }
 
-    public async execute(): Promise<{ query: string, results: Array<object> }>
+    public async execute(): Promise<{ query: string, results: ReadonlyArray<object> }>
     {
-        try
-        {
-            const api = new YoutubeMusicApi();
-            await api.initalize();
-            const response = await api.search(this.query, "SONG");
-            console.debug(response);
-            return {
-                query: this.query,
-                results: response.content
-                    .filter((item) => item.type === "song")
-                    .map((item) => ({
-                        id: item.videoId,
-                        title: item.name,
-                        ...item
-                    }))
-            };
-        } catch (error)
-        {
-            throw new Error(`Could not get data from youtube because of ${error.message}`);
-        }
+        return {
+            query: this.query,
+            results: await new MusicYoutubeSearcher().search(this.query)
+        };
     }
 }
