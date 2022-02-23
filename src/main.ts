@@ -22,7 +22,7 @@ import {GeneralExecutorBuilder} from "./Controlling/HTTP/ExecutorBuilders/Genera
 const youtubeController = new YoutubeController();
 const messageCreator = new MessageCreator(new ShowYoutubeInstancesExecutor(youtubeController));
 const subscriberManager = new SubscribersManager(messageCreator);
-const eventPublisher = new EventPublisher(messageCreator, subscriberManager);
+const eventPublisher = new EventPublisher(messageCreator);
 const eventProducingYoutubeController = new EventProducingYoutubeController(youtubeController, eventPublisher);
 const jsonBodyDataGetter = new JsonBodyDataGetter(config.controllingApi.maxUploadTimeInMs);
 const httpRequestBuilder = new HttpRequestBuilder(jsonBodyDataGetter);
@@ -47,3 +47,5 @@ const youtubeInstanceBuilder = new EventProducingYoutubeInstanceBuilder(eventPub
 new YoutubeInstanceWebSocketServer(eventProducingYoutubeController, youtubeInstanceBuilder, config.browserConnection);
 new SubscriberWebSocketServer(config.subscribing.websocket, subscriberManager);
 new SubscriberTCPServer(config.subscribing.tcp, subscriberManager);
+
+eventPublisher.getMessages().subscribe({next: (message) => subscriberManager.publishMessage(message)});

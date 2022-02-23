@@ -1,34 +1,40 @@
 import {YoutubeInstanceId} from "../DataTypes/YoutubeInstanceId";
 import {VideoInfo} from "../DataTypes/VideoInfo";
-import {SubscribersManager} from "./SubscribersManager";
 import {MessageCreator} from "./MessageCreator";
+import {Observable, Subject} from "rxjs";
+import {Message} from "./Message";
 
 export class EventPublisher
 {
     private readonly messageCreator: MessageCreator;
-    private readonly subscriberManager: SubscribersManager;
+    private readonly messages: Subject<Message>;
 
-    public constructor(messageCreator: MessageCreator, subscriberManager: SubscribersManager)
+    public constructor(messageCreator: MessageCreator)
     {
         this.messageCreator = messageCreator;
-        this.subscriberManager = subscriberManager;
+        this.messages = new Subject<Message>();
     }
 
-    public async publishYoutubeInstanceAddedMessage(id: YoutubeInstanceId): Promise<void>
+    public getMessages(): Observable<Message>
+    {
+        return this.messages;
+    }
+
+    public publishYoutubeInstanceAddedMessage(id: YoutubeInstanceId): void
     {
         const message = this.messageCreator.createYoutubeInstanceAddedMessage(id);
-        await this.subscriberManager.publishMessage(message);
+        this.messages.next(message);
     }
 
-    public async publishYoutubeInstanceRemovedMessage(id: YoutubeInstanceId): Promise<void>
+    public publishYoutubeInstanceRemovedMessage(id: YoutubeInstanceId): void
     {
         const message = this.messageCreator.createYoutubeInstanceRemovedMessage(id);
-        await this.subscriberManager.publishMessage(message);
+        this.messages.next(message);
     }
 
-    public async publishYoutubeInstanceChangedMessage(id: YoutubeInstanceId, videoInfo: VideoInfo): Promise<void>
+    public publishYoutubeInstanceChangedMessage(id: YoutubeInstanceId, videoInfo: VideoInfo): void
     {
         const message = this.messageCreator.createYoutubeInstanceChangedMessage(id, videoInfo);
-        await this.subscriberManager.publishMessage(message);
+        this.messages.next(message);
     }
 }
