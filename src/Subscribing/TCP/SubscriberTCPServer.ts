@@ -21,6 +21,10 @@ export class SubscriberTCPServer
             console.debug("new TCP connection");
             const subscriber = new TCPSubscriber(socket);
             this.subscriberManager.addSubscriber(subscriber);
+            socket.on("timeout", () => {
+                console.warn(`Connection to ${socket.remoteAddress}:${socket.remotePort} has timeouted. Closing the connection.`);
+                socket.end();
+            });
             socket.on("close", () => {
                 console.debug("closing TCP connection");
                 this.subscriberManager.removeSubscriber(subscriber);

@@ -1,6 +1,5 @@
 import {Executor} from "./Executor";
-import {MusicYoutubeSearcher} from "./VideoSearcher/MusicYoutubeSearcher";
-
+import {YoutubeSearcher} from "./VideoSearcher/YoutubeSearcher";
 
 export class GetSearchResultsExecutor implements Executor<{ query: string, results: ReadonlyArray<object> }>
 {
@@ -15,7 +14,7 @@ export class GetSearchResultsExecutor implements Executor<{ query: string, resul
     {
         return {
             query: this.query,
-            results: await new MusicYoutubeSearcher().search(this.query)
+            results: await new YoutubeSearcher().search(this.query)
         };
     }
 }
