@@ -8,7 +8,7 @@ export class YoutubeSearcher implements VideoSearcher
     {
         try
         {
-            const response = await this.requestYoutube();
+            const response = await this.requestYoutube(query);
             return this.parseVideoInfo(response);
         } catch (error)
         {
@@ -35,7 +35,7 @@ export class YoutubeSearcher implements VideoSearcher
             }));
     }
 
-    private requestYoutube(): Promise<AxiosResponse>
+    private requestYoutube(query: string): Promise<AxiosResponse>
     {
         return axios.post("https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8", {
                 "context": {
@@ -47,7 +47,7 @@ export class YoutubeSearcher implements VideoSearcher
                         "clientVersion": "2.20211019.06.00",
                     },
                 },
-                "query": "rammstein du hast",
+                "query": query,
             },
             {
                 "headers": {

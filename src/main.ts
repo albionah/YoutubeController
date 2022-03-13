@@ -19,6 +19,11 @@ import {SubscriberTCPServer} from "./Subscribing/TCP/SubscriberTCPServer";
 import {HttpRequestBuilder} from "./Controlling/HTTP/HttpRequestBuilder";
 import {GeneralExecutorBuilder} from "./Controlling/HTTP/ExecutorBuilders/GeneralExecutorBuilder";
 
+["debug", "log", "error", "warn"].forEach((logSeverity) => {
+    const log = console[logSeverity];
+    console[logSeverity] = (...args) => log(`${new Date().toLocaleString()}:`, ...args);
+});
+
 const youtubeController = new YoutubeController();
 const messageCreator = new MessageCreator(new ShowYoutubeInstancesExecutor(youtubeController));
 const subscriberManager = new SubscribersManager(messageCreator);
